@@ -318,6 +318,43 @@ ClassMethod D4P2() As %String
 	quit maxpos*maxguard
 }
 
+ClassMethod D5P1(pIn="") As %String
+{
+	if pIn="" {
+		do ##class(AOC.Y2018).GetInput(5,.out)
+		set l=out(1)_out(2)
+	} else {
+		set l=pIn
+	}
+	
+	set done=0
+	while 'done {
+		set done=1
+		for i=1:1:$length(l)-1 {
+			if ($e(l,i)'=$e(l,i+1))&&($zconvert($e(l,i),"U")=$zconvert($e(l,i+1),"U")) {
+				set l=$e(l,1,i-1)_$e(l,i+2,*)
+				set done=0
+			}
+		}
+	}
+	
+	quit l
+}
+
+ClassMethod D5P2() As %String
+{
+	set x=##class(AOC.Y2018).D5P1()
+	set minlen=$l(x)
+	for i=65:1:90 {
+		set temp=##class(AOC.Y2018).D5P1($translate(x,$char(i)_$zconvert($char(i),"L"),""))
+		if $l(temp)<minlen {
+			set minlen=$l(temp)
+		}
+	}
+	
+	quit minlen
+}
+
 ClassMethod D7P1() As %String
 {
 	do ##class(AOC.Y2018).GetInput(7,.out)
