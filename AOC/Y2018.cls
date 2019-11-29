@@ -1,23 +1,7 @@
-Class AOC.Y2018
+Class AOC.Y2018 Extends AOC.Base
 {
 
-ClassMethod GetInput(day, Output out) As %Status
-{
-		set st=$$$OK
-		try {
-			set path="C:\Users\psteiwer\Documents\AOC\Y2018\day"_day_".txt"
-			set file=##class(%Stream.FileCharacter).%New()
-			do file.LinkToFile(path)
-			while 'file.AtEnd {
-				set str=file.ReadLine()
-				set out($i(out))=str
-			}
-		} catch ex {
-			set st=ex.AsStatus()
-		}
-		
-		quit st
-}
+PARAMETER Year As %Integer = 2018;
 
 ClassMethod D1P1() As %String
 {

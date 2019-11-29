@@ -1,4 +1,4 @@
-Class AOC.Y2017
+Class AOC.Y2017 Extends AOC.Base
 {
 
 ClassMethod Day1P1(pInput As %String) As %Integer
