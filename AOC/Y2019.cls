@@ -35,7 +35,7 @@ ClassMethod D1P2() As %String
 
 ClassMethod D2P1() As %String
 {
-	do ##class(AOC.Y2019).GetInput(1,.out)
+	do ##class(AOC.Y2019).GetInput(2,.out)
 	
 	set res=""
 	set pos=$o(out(""),1,l)
