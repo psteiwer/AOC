@@ -10,6 +10,7 @@ ClassMethod D1P1() As %String
 	set res=""
 	set pos=$o(out(""),1,l)
 	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
 		set res=res+((l\3)-2)
 		set pos=$o(out(pos),1,l)
 	}
@@ -23,7 +24,7 @@ ClassMethod D1P2() As %String
 	set res=""
 	set pos=$o(out(""),1,l)
 	while pos'="" {
-		set temp=l
+		do ##class(AOC.Y2019).ParseString(l,,.temp)
 		while temp>0 {
 			set temp=((temp\3)-2)
 			set:temp>0 res=res+temp
@@ -40,6 +41,10 @@ ClassMethod D2P1() As %String
 	set res=""
 	set pos=$o(out(""),1,l)
 	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		
+		
 		set res=res+l
 		set pos=$o(out(pos),1,l)
 	}

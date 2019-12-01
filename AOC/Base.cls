@@ -21,4 +21,15 @@ ClassMethod GetInput(day, Output out) As %Status
 		quit st
 }
 
+ClassMethod ParseString(pString As %String = "", pDelimiter As %String = "", ByRef pVariables...)
+{
+	If ((pDelimiter="") || (pString="")) {
+		Set pVariables(1)=pString
+	} Else {
+		For i=1:1:$Length(pString,pDelimiter) {
+			Set pVariables(i)=$Piece(pString,pDelimiter,i)
+		}
+	}
+}
+
 }
