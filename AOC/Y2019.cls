@@ -34,21 +34,107 @@ ClassMethod D1P2() As %String
 	quit res
 }
 
-ClassMethod D2P1() As %String
+ClassMethod D2P1(out="") As %String
 {
-	do ##class(AOC.Y2019).GetInput(2,.out)
+	if out="" {
+		do ##class(AOC.Y2019).GetInput(2,.out)
+	}
 	
 	set res=""
 	set pos=$o(out(""),1,l)
+	set maxlen=0
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
-		
-		
-		
-		set res=res+l
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
 		set pos=$o(out(pos),1,l)
 	}
-	quit res
+	
+	set instructions(1)=12
+	set instructions(2)=2
+	
+	set pos=0
+	
+	while 1 {
+		set inst=instructions(pos)
+		set pos=(pos+1)#maxlen
+		set val1=instructions(instructions(pos)#maxlen)
+		set pos=(pos+1)#maxlen
+		set val2=instructions(instructions(pos)#maxlen)
+		set pos=(pos+1)#maxlen
+		set storeloc=instructions(pos)#maxlen
+		set pos=(pos+1)
+		if inst=99 {
+			quit
+		} elseif inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		}
+	}
+	
+	zw instructions
+	quit instructions(0)
+}
+
+ClassMethod D2P2(out="") As %String
+{
+	if out="" {
+		do ##class(AOC.Y2019).GetInput(2,.out)
+	}
+	//zw out
+	
+	for x=0:1:99 {
+		for y=0:1:99 {
+			set res=""
+			set pos=$o(out(""),1,l)
+			set maxlen=0
+			while pos'="" {
+				set maxlen=$l(l,",")
+				for i=0:1:$l(l,",")-1 {
+					set instructions(i)=$p(l,",",i+1)
+				}
+				set pos=$o(out(pos),1,l)
+			}
+			
+			set instructions(1)=x
+			set instructions(2)=y
+			
+			set pos=0
+			
+			while 1 {
+				set inst=instructions(pos)
+				set pos=(pos+1)#maxlen
+				set val1=instructions(instructions(pos)#maxlen)
+				set pos=(pos+1)#maxlen
+				set val2=instructions(instructions(pos)#maxlen)
+				set pos=(pos+1)#maxlen
+				set storeloc=instructions(pos)#maxlen
+				set pos=(pos+1)
+				if inst=99 {
+					quit
+				} elseif inst=1 {
+					set instructions(storeloc)=val1+val2
+				} elseif inst=2 {
+					set instructions(storeloc)=val1*val2
+				}
+			}
+			
+			if instructions(0)=19690720 {
+				zw instructions
+				w "x="_x,!
+				w "y="_y,!
+				w "answer="_(100*x+y),!
+				quit
+			}
+		}
+		if instructions(0)=19690720 {
+			quit
+		}
+	}
+	
+	quit instructions(0)
 }
 
 }
