@@ -276,4 +276,20 @@ ClassMethod D3P2(out) As %String
 	quit maxsteps
 }
 
+ClassMethod DXP1(out) As %String
+{
+	do:'$d(out) ##class(AOC.Y2019).GetInput(X,.out)
+	
+	set res=""
+	set pos=$o(out(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		
+		
+		set pos=$o(out(pos),1,l)
+	}
+	quit res
+}
+
 }
