@@ -5,50 +5,50 @@ PARAMETER Year As %Integer = 2019;
 
 ClassMethod D1P1() As %String
 {
-	do ##class(AOC.Y2019).GetInput(1,.out)
+	do ##class(AOC.Y2019).GetInput(1,.input)
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,,.l)
 		set res=res+((l\3)-2)
-		set pos=$o(out(pos),1,l)
+		set pos=$o(input(pos),1,l)
 	}
 	quit res
 }
 
 ClassMethod D1P2() As %String
 {
-	do ##class(AOC.Y2019).GetInput(1,.out)
+	do ##class(AOC.Y2019).GetInput(1,.input)
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,,.temp)
 		while temp>0 {
 			set temp=((temp\3)-2)
 			set:temp>0 res=res+temp
 		} 
-		set pos=$o(out(pos),1,l)
+		set pos=$o(input(pos),1,l)
 	}
 	quit res
 }
 
-ClassMethod D2P1(out="") As %String
+ClassMethod D2P1(input="") As %String
 {
-	if out="" {
-		do ##class(AOC.Y2019).GetInput(2,.out)
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(2,.input)
 	}
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	set maxlen=0
 	while pos'="" {
 		set maxlen=$l(l,",")
 		for i=0:1:$l(l,",")-1 {
 			set instructions(i)=$p(l,",",i+1)
 		}
-		set pos=$o(out(pos),1,l)
+		set pos=$o(input(pos),1,l)
 	}
 	
 	set instructions(1)=12
@@ -78,24 +78,24 @@ ClassMethod D2P1(out="") As %String
 	quit instructions(0)
 }
 
-ClassMethod D2P2(out="") As %String
+ClassMethod D2P2(input="") As %String
 {
-	if out="" {
-		do ##class(AOC.Y2019).GetInput(2,.out)
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(2,.input)
 	}
 	//zw out
 	
 	for x=0:1:99 {
 		for y=0:1:99 {
 			set res=""
-			set pos=$o(out(""),1,l)
+			set pos=$o(input(""),1,l)
 			set maxlen=0
 			while pos'="" {
 				set maxlen=$l(l,",")
 				for i=0:1:$l(l,",")-1 {
 					set instructions(i)=$p(l,",",i+1)
 				}
-				set pos=$o(out(pos),1,l)
+				set pos=$o(input(pos),1,l)
 			}
 			
 			set instructions(1)=x
@@ -137,12 +137,12 @@ ClassMethod D2P2(out="") As %String
 	quit instructions(0)
 }
 
-ClassMethod D3P1(out) As %String
+ClassMethod D3P1(input) As %String
 {
-	do:'$d(out) ##class(AOC.Y2019).GetInput(3,.out)
+	do:'$d(input) ##class(AOC.Y2019).GetInput(3,.input)
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	
 	set x=0
 	set y=0
@@ -165,7 +165,7 @@ ClassMethod D3P1(out) As %String
 		}
 	}
 	
-	set pos=$o(out(pos),1,l)
+	set pos=$o(input(pos),1,l)
 	set x=0
 	set y=0
 	set grid2(x,y)=1
@@ -206,12 +206,12 @@ ClassMethod D3P1(out) As %String
 	quit maxdistance
 }
 
-ClassMethod D3P2(out) As %String
+ClassMethod D3P2(input) As %String
 {
-	do:'$d(out) ##class(AOC.Y2019).GetInput(3,.out)
+	do:'$d(input) ##class(AOC.Y2019).GetInput(3,.input)
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	
 	set x=0
 	set y=0
@@ -234,7 +234,7 @@ ClassMethod D3P2(out) As %String
 		}
 	}
 	
-	set pos=$o(out(pos),1,l)
+	set pos=$o(input(pos),1,l)
 	set x=0
 	set y=0
 	set count=0
@@ -276,11 +276,11 @@ ClassMethod D3P2(out) As %String
 	quit maxsteps
 }
 
-ClassMethod D4P1(out) As %String
+ClassMethod D4P1(input) As %String
 {
-	set:'$d(out) out="372037-905157"
+	set:'$d(input) input="372037-905157"
 	
-	do ##class(AOC.Y2019).ParseString(out,"-",.minnum,.maxnum)
+	do ##class(AOC.Y2019).ParseString(input,"-",.minnum,.maxnum)
 	
 	set res=0
 	for i=minnum:1:maxnum {
@@ -304,11 +304,11 @@ ClassMethod D4P1(out) As %String
 	quit res
 }
 
-ClassMethod D4P2(out) As %String
+ClassMethod D4P2(input) As %String
 {
-	set:'$d(out) out="372037-905157"
+	set:'$d(input) input="372037-905157"
 	
-	do ##class(AOC.Y2019).ParseString(out,"-",.minnum,.maxnum)
+	do ##class(AOC.Y2019).ParseString(input,"-",.minnum,.maxnum)
 	
 	set res=0
 	for i=minnum:1:maxnum {
@@ -341,18 +341,18 @@ ClassMethod D4P2(out) As %String
 	quit res
 }
 
-ClassMethod DXP1(out) As %String
+ClassMethod DXP1(input) As %String
 {
-	do:'$d(out) ##class(AOC.Y2019).GetInput(X,.out)
+	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
 	
 	set res=""
-	set pos=$o(out(""),1,l)
+	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,,.l)
 		
 		
 		
-		set pos=$o(out(pos),1,l)
+		set pos=$o(input(pos),1,l)
 	}
 	quit res
 }
