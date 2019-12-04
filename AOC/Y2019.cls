@@ -276,6 +276,71 @@ ClassMethod D3P2(out) As %String
 	quit maxsteps
 }
 
+ClassMethod D4P1(out) As %String
+{
+	set:'$d(out) out="372037-905157"
+	
+	do ##class(AOC.Y2019).ParseString(out,"-",.minnum,.maxnum)
+	
+	set res=0
+	for i=minnum:1:maxnum {
+		set last=-1
+		set hasrepeat=0
+		set increasing=1
+		for j=1:1:6 {
+			if $e(i,j)<last {
+				set increasing=0
+				quit
+			} elseif $e(i,j)=last {
+				set hasrepeat=1
+			}
+			set last=$e(i,j)
+		}
+		
+		if hasrepeat&&increasing {
+			set res=$i(res)
+		}
+	}
+	quit res
+}
+
+ClassMethod D4P2(out) As %String
+{
+	set:'$d(out) out="372037-905157"
+	
+	do ##class(AOC.Y2019).ParseString(out,"-",.minnum,.maxnum)
+	
+	set res=0
+	for i=minnum:1:maxnum {
+		set last=-1
+		set hasrepeat=0
+		set increasing=1
+		set repeatcount=0
+		for j=1:1:6 {
+			if $e(i,j)<last {
+				set increasing=0
+				quit
+			} elseif $e(i,j)=last {
+				set repeatcount=$i(repeatcount)
+				if ((j=6) && (repeatcount=1)) {
+					set hasrepeat=1
+				}
+			} else {
+				if repeatcount=1 {
+					set hasrepeat=1
+				}
+				set repeatcount=0
+			}
+			set last=$e(i,j)
+		}
+		
+		if hasrepeat&&increasing {
+			set res=$i(res)
+		}
+	}
+	quit res
+}
+
 ClassMethod DXP1(out) As %String
 {
 	do:'$d(out) ##class(AOC.Y2019).GetInput(X,.out)
