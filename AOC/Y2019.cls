@@ -372,6 +372,7 @@ ClassMethod D5P1(input="") As %String
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
 		set pos=(pos+1)#maxlen
+		// ??? inst=4
 		if ((mode1) || (inst=3) || (inst=4)) {
 			set val1=instructions(pos)
 		} else {
@@ -444,6 +445,7 @@ ClassMethod D5P2(input="") As %String
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
 		set pos=(pos+1)#maxlen
+		// ??? inst=4
 		if ((mode1) || (inst=3) || (inst=4)) {
 			set val1=instructions(pos)
 		} else {
