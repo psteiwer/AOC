@@ -341,6 +341,172 @@ ClassMethod D4P2(input) As %String
 	quit res
 }
 
+ClassMethod D5P1(input="") As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(5,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	//set instructions(1)=12
+	//set instructions(2)=2
+	
+	set pos=0
+	
+	set inputval=1
+	
+	while 1 {
+		set inst=instructions(pos)
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		set pos=(pos+1)#maxlen
+		if ((mode1) || (inst=3) || (inst=4)) {
+			set val1=instructions(pos)
+		} else {
+			set val1=instructions(instructions(pos)#maxlen)
+		}
+		if ((inst=1) || (inst=2) || (inst=99)) {
+			set pos=(pos+1)#maxlen
+			if mode2 {
+				set val2=instructions(pos)
+			} else {
+				set val2=instructions(instructions(pos)#maxlen)
+			}
+			set pos=(pos+1)#maxlen
+			if (mode3) {
+				set storeloc=instructions(pos)#maxlen
+			} else {
+				// ???
+				set storeloc=instructions(pos)#maxlen
+			}
+		}
+		set pos=(pos+1)
+		if inst=99 {
+			quit
+		} elseif inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set instructions(val1)=inputval
+		} elseif inst=4 {
+			if mode1 {
+				zw val1
+			} else {
+				zw instructions(val1)
+			}
+		}
+	}
+	
+	quit instructions(0)
+}
+
+ClassMethod D5P2(input="") As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(5,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	//set instructions(1)=12
+	//set instructions(2)=2
+	
+	set pos=0
+	
+	set inputval=5
+	
+	while 1 {
+		set inst=instructions(pos)
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		set pos=(pos+1)#maxlen
+		if ((mode1) || (inst=3) || (inst=4)) {
+			set val1=instructions(pos)
+		} else {
+			set val1=instructions(instructions(pos)#maxlen)
+		}
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
+			set pos=(pos+1)#maxlen
+			if mode2 {
+				set val2=instructions(pos)
+			} else {
+				set val2=instructions(instructions(pos)#maxlen)
+			}
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				set pos=(pos+1)#maxlen
+				if (mode3) {
+					set storeloc=instructions(pos)#maxlen
+				} else {
+					// ???
+					set storeloc=instructions(pos)#maxlen
+				}
+			}
+		}
+		set pos=(pos+1)
+		if inst=99 {
+			quit
+		} elseif inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set instructions(val1)=inputval
+		} elseif inst=4 {
+			if mode1 {
+				zw val1
+			} else {
+				zw instructions(val1)
+			}
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		}
+	}
+	
+	quit instructions(0)
+}
+
 ClassMethod DXP1(input) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
