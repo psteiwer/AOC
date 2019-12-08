@@ -897,6 +897,94 @@ ClassMethod D7P2(input="",debug=0) As %String
 	quit maxout
 }
 
+ClassMethod D8P1(input) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(8,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		set row=0
+		set col=0
+		set layer=0
+		for i=0:1:$l(l)-1 {
+			set image(layer,row,col)=$e(l,i+1)
+			
+			set vals(layer,$e(l,i+1))=$i(vals(layer,$e(l,i+1)))
+			
+			set col=(col+1)#25
+			set:((i>0)&&(col=0)) row=(row+1)#6
+			set:((i>0)&&(col=0)&&(row=0)) layer=layer+1
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set minzero=9999999
+	set layer=$o(vals(""))
+	set row=0
+	while layer'="" {
+		set numzero=vals(layer,0)
+		if numzero<minzero {
+			set minzero=numzero
+			set res=vals(layer,1)*vals(layer,2)
+		}		
+		set layer=$o(vals(layer))
+	}
+	
+	quit res
+}
+
+ClassMethod D8P2(input) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(8,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		set row=0
+		set col=0
+		set layer=0
+		for i=0:1:$l(l)-1 {
+			set image(layer,row,col)=$e(l,i+1)
+			
+			set vals(layer,$e(l,i+1))=$i(vals(layer,$e(l,i+1)))
+			
+			set col=(col+1)#25
+			set:((i>0)&&(col=0)) row=(row+1)#6
+			set:((i>0)&&(col=0)&&(row=0)) layer=layer+1
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	for row=0:1:5 {
+		for col=0:1:24 {
+			set layer=$o(image(""))
+			while layer'="" {
+				set temp=image(layer,row,col)
+				if temp=2 {
+					set layer=$o(image(layer))
+				} else {
+					set res(row,col)=temp
+					quit
+				}
+			}
+		}
+	}
+	
+	for row=0:1:5 {
+		for col=0:1:24 {
+			if res(row,col)=1 {
+				w res(row,col)
+			} else {
+				w " "
+			}
+		}
+		w !
+	}
+	
+	quit ""
+}
+
 ClassMethod DXP1(input) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
