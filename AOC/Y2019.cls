@@ -975,7 +975,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 		zw:debug pos
 		if mode1=2 {
 			set offset=0
-			set:mode1=2 offset=relativebase
+			set offset=relativebase
 			if (inst=3) {
 				set val1=$g(instructions($i(pos)),0)+offset
 			} else {
@@ -990,7 +990,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 			if mode2=2 {
 				set offset=0
-				set:mode2=2 offset=relativebase
+				set offset=relativebase
 				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			} elseif mode2 {
 				set val2=$g(instructions($i(pos)),0)
@@ -1001,7 +1001,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
 				if mode3=2 {
 					set offset=0
-					set:mode3=2 offset=relativebase
+					set offset=relativebase
 					set storeloc=$g(instructions($i(pos)),0)+offset
 					//set storeloc=$g(instructions($i(pos)),0)+offset
 				} elseif (mode3) {
@@ -1049,8 +1049,6 @@ ClassMethod D9P1(input="",debug=0) As %String
 		} elseif inst=9 {
 			set relativebase=relativebase+val1
 		}
-		
-		break:debug
 	}
 	
 	quit res
@@ -1091,7 +1089,7 @@ ClassMethod D9P2(input="",debug=0) As %String
 		zw:debug pos
 		if mode1=2 {
 			set offset=0
-			set:mode1=2 offset=relativebase
+			set offset=relativebase
 			if (inst=3) {
 				set val1=$g(instructions($i(pos)),0)+offset
 			} else {
@@ -1106,7 +1104,7 @@ ClassMethod D9P2(input="",debug=0) As %String
 		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 			if mode2=2 {
 				set offset=0
-				set:mode2=2 offset=relativebase
+				set offset=relativebase
 				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			} elseif mode2 {
 				set val2=$g(instructions($i(pos)),0)
@@ -1117,9 +1115,8 @@ ClassMethod D9P2(input="",debug=0) As %String
 			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
 				if mode3=2 {
 					set offset=0
-					set:mode3=2 offset=relativebase
+					set offset=relativebase
 					set storeloc=$g(instructions($i(pos)),0)+offset
-					//set storeloc=$g(instructions($i(pos)),0)+offset
 				} elseif (mode3) {
 					set storeloc=$g(instructions($i(pos)),0)
 				} else {
