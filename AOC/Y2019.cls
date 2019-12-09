@@ -50,31 +50,24 @@ ClassMethod D2P1(input="") As %String
 		}
 		set pos=$o(input(pos),1,l)
 	}
+	set pos=-1
 	
 	set instructions(1)=12
 	set instructions(2)=2
 	
-	set pos=0
-	
 	while 1 {
-		set inst=instructions(pos)
-		set pos=(pos+1)#maxlen
-		set val1=instructions(instructions(pos)#maxlen)
-		set pos=(pos+1)#maxlen
-		set val2=instructions(instructions(pos)#maxlen)
-		set pos=(pos+1)#maxlen
-		set storeloc=instructions(pos)#maxlen
-		set pos=(pos+1)
-		if inst=99 {
-			quit
-		} elseif inst=1 {
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set val1=instructions(instructions($i(pos))#maxlen)
+		set val2=instructions(instructions($i(pos))#maxlen)
+		set storeloc=instructions($i(pos))#maxlen
+		if inst=1 {
 			set instructions(storeloc)=val1+val2
 		} elseif inst=2 {
 			set instructions(storeloc)=val1*val2
 		}
 	}
 	
-	zw instructions
 	quit instructions(0)
 }
 
@@ -101,20 +94,15 @@ ClassMethod D2P2(input="") As %String
 			set instructions(1)=x
 			set instructions(2)=y
 			
-			set pos=0
+			set pos=-1
 			
 			while 1 {
-				set inst=instructions(pos)
-				set pos=(pos+1)#maxlen
-				set val1=instructions(instructions(pos)#maxlen)
-				set pos=(pos+1)#maxlen
-				set val2=instructions(instructions(pos)#maxlen)
-				set pos=(pos+1)#maxlen
-				set storeloc=instructions(pos)#maxlen
-				set pos=(pos+1)
-				if inst=99 {
-					quit
-				} elseif inst=1 {
+				set inst=instructions($i(pos))
+				quit:inst=99
+				set val1=instructions(instructions($i(pos))#maxlen)
+				set val2=instructions(instructions($i(pos))#maxlen)
+				set storeloc=instructions($i(pos))#maxlen
+				if inst=1 {
 					set instructions(storeloc)=val1+val2
 				} elseif inst=2 {
 					set instructions(storeloc)=val1*val2
@@ -122,11 +110,10 @@ ClassMethod D2P2(input="") As %String
 			}
 			
 			if instructions(0)=19690720 {
-				zw instructions
-				w "x="_x,!
-				w "y="_y,!
-				w "answer="_(100*x+y),!
-				quit
+				//zw instructions
+				//w "x="_x,!
+				//w "y="_y,!
+				return (100*x+y)
 			}
 		}
 		if instructions(0)=19690720 {
@@ -358,45 +345,36 @@ ClassMethod D5P1(input="") As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
-	set pos=0
-	
+	set pos=-1
 	set inputval=1
 	
 	while 1 {
-		set inst=instructions(pos)
+		set inst=instructions($i(pos))
+		quit:inst=99
 		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
-		set pos=(pos+1)#maxlen
 		// ??? inst=4
 		if ((mode1) || (inst=3) || (inst=4)) {
-			set val1=instructions(pos)
+			set val1=instructions($i(pos))
 		} else {
-			set val1=instructions(instructions(pos)#maxlen)
+			set val1=instructions(instructions($i(pos))#maxlen)
 		}
-		if ((inst=1) || (inst=2) || (inst=99)) {
-			set pos=(pos+1)#maxlen
+		if ((inst=1) || (inst=2)) {
 			if mode2 {
-				set val2=instructions(pos)
+				set val2=instructions($i(pos))
 			} else {
-				set val2=instructions(instructions(pos)#maxlen)
+				set val2=instructions(instructions($i(pos))#maxlen)
 			}
-			set pos=(pos+1)#maxlen
 			if (mode3) {
-				set storeloc=instructions(pos)#maxlen
+				set storeloc=instructions($i(pos))#maxlen
 			} else {
 				// ???
-				set storeloc=instructions(pos)#maxlen
+				set storeloc=instructions($i(pos))#maxlen
 			}
 		}
-		set pos=(pos+1)
-		if inst=99 {
-			quit
-		} elseif inst=1 {
+		if inst=1 {
 			set instructions(storeloc)=val1+val2
 		} elseif inst=2 {
 			set instructions(storeloc)=val1*val2
@@ -404,14 +382,15 @@ ClassMethod D5P1(input="") As %String
 			set instructions(val1)=inputval
 		} elseif inst=4 {
 			if mode1 {
-				zw val1
+				set res=val1
 			} else {
-				zw instructions(val1)
+				set res=instructions(val1)
 			}
+			w res,!
 		}
 	}
 	
-	quit instructions(0)
+	quit res
 }
 
 ClassMethod D5P2(input="") As %String
@@ -434,44 +413,38 @@ ClassMethod D5P2(input="") As %String
 	//set instructions(1)=12
 	//set instructions(2)=2
 	
-	set pos=0
-	
+	set pos=-1
 	set inputval=5
 	
 	while 1 {
-		set inst=instructions(pos)
+		set inst=instructions($i(pos))
+		quit:inst=99
 		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
-		set pos=(pos+1)#maxlen
 		// ??? inst=4
 		if ((mode1) || (inst=3) || (inst=4)) {
-			set val1=instructions(pos)
+			set val1=instructions($i(pos))
 		} else {
-			set val1=instructions(instructions(pos)#maxlen)
+			set val1=instructions(instructions($i(pos))#maxlen)
 		}
-		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
-			set pos=(pos+1)#maxlen
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 			if mode2 {
-				set val2=instructions(pos)
+				set val2=instructions($i(pos))
 			} else {
-				set val2=instructions(instructions(pos)#maxlen)
+				set val2=instructions(instructions($i(pos))#maxlen)
 			}
 			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-				set pos=(pos+1)#maxlen
 				if (mode3) {
-					set storeloc=instructions(pos)#maxlen
+					set storeloc=instructions($i(pos))#maxlen
 				} else {
 					// ???
-					set storeloc=instructions(pos)#maxlen
+					set storeloc=instructions($i(pos))#maxlen
 				}
 			}
 		}
-		set pos=(pos+1)
-		if inst=99 {
-			quit
-		} elseif inst=1 {
+		if inst=1 {
 			set instructions(storeloc)=val1+val2
 		} elseif inst=2 {
 			set instructions(storeloc)=val1*val2
@@ -479,17 +452,18 @@ ClassMethod D5P2(input="") As %String
 			set instructions(val1)=inputval
 		} elseif inst=4 {
 			if mode1 {
-				zw val1
+				set res=val1
 			} else {
-				zw instructions(val1)
+				set res=instructions(val1)
 			}
+			w res,!
 		} elseif inst=5 {
 			if val1'=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=6 {
 			if val1=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=7 {
 			if val1<val2 {
@@ -506,7 +480,7 @@ ClassMethod D5P2(input="") As %String
 		}
 	}
 	
-	quit instructions(0)
+	quit res
 }
 
 ClassMethod D6P1(input) As %String
@@ -602,11 +576,7 @@ ClassMethod D7P1(input="",debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
 	zw:debug instructions
-	
 	merge resetinstructions=instructions
 	
 	set pos=0
@@ -627,44 +597,39 @@ ClassMethod D7P1(input="",debug=0) As %String
 						zw:debug inputval
 						for f=1:1:5 {
 							set inputpos=0
-							set pos=0
+							set pos=-1
 							k instructions
 							merge instructions=resetinstructions
 							k inputcount
 							while 1 {
-								set inst=instructions(pos)
+								set inst=instructions($i(pos))
+								quit:inst=99
 								set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 								set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 								set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 								set inst=inst#100
-								set pos=(pos+1)#maxlen
 								// ??? inst=4
 								if ((mode1) || (inst=3) || (inst=4)) {
-									set val1=instructions(pos)
+									set val1=instructions($i(pos))
 								} else {
-									set val1=instructions(instructions(pos)#maxlen)
+									set val1=instructions(instructions($i(pos))#maxlen)
 								}
-								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
-									set pos=(pos+1)#maxlen
+								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 									if mode2 {
-										set val2=instructions(pos)
+										set val2=instructions($i(pos))
 									} else {
-										set val2=instructions(instructions(pos)#maxlen)
+										set val2=instructions(instructions($i(pos))#maxlen)
 									}
 									if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-										set pos=(pos+1)#maxlen
 										if (mode3) {
-											set storeloc=instructions(pos)#maxlen
+											set storeloc=instructions($i(pos))#maxlen
 										} else {
 											// ???
-											set storeloc=instructions(pos)#maxlen
+											set storeloc=instructions($i(pos))#maxlen
 										}
 									}
 								}
-								set pos=(pos+1)
-								if inst=99 {
-									quit
-								} elseif inst=1 {
+								if inst=1 {
 									set instructions(storeloc)=val1+val2
 								} elseif inst=2 {
 									set instructions(storeloc)=val1*val2
@@ -687,11 +652,11 @@ ClassMethod D7P1(input="",debug=0) As %String
 									}
 								} elseif inst=5 {
 									if val1'=0 {
-										set pos=val2
+										set pos=val2-1
 									}
 								} elseif inst=6 {
 									if val1=0 {
-										set pos=val2
+										set pos=val2-1
 									}
 								} elseif inst=7 {
 									if val1<val2 {
@@ -745,13 +710,8 @@ ClassMethod D7P2(input="",debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
 	zw:debug instructions
-	
 	merge originalinstructions=instructions
-	
 	set maxout=-1
 	
 	for a=5:1:9 {
@@ -781,11 +741,11 @@ ClassMethod D7P2(input="",debug=0) As %String
 						merge resetinstructions(4)=originalinstructions
 						merge resetinstructions(5)=originalinstructions
 						
-						set pos(1)=0
-						set pos(2)=0
-						set pos(3)=0
-						set pos(4)=0
-						set pos(5)=0
+						set pos(1)=-1
+						set pos(2)=-1
+						set pos(3)=-1
+						set pos(4)=-1
+						set pos(5)=-1
 						
 						while 'haltfound {
 							set inputpos=$i(inputpos)#5
@@ -796,40 +756,35 @@ ClassMethod D7P2(input="",debug=0) As %String
 							//k instructions
 							//merge instructions=resetinstructions
 							while 1 {
-								set inst=instructions(pos)
+								set inst=instructions($i(pos))
+								set:inst=99 haltfound=1
+								quit:inst=99
 								set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 								set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 								set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 								set inst=inst#100
-								set pos=(pos+1)#maxlen
 								// ??? inst=4
 								if ((mode1) || (inst=3) || (inst=4)) {
-									set val1=instructions(pos)
+									set val1=instructions($i(pos))
 								} else {
-									set val1=instructions(instructions(pos)#maxlen)
+									set val1=instructions(instructions($i(pos))#maxlen)
 								}
-								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
-									set pos=(pos+1)#maxlen
+								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 									if mode2 {
-										set val2=instructions(pos)
+										set val2=instructions($i(pos))
 									} else {
-										set val2=instructions(instructions(pos)#maxlen)
+										set val2=instructions(instructions($i(pos))#maxlen)
 									}
 									if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-										set pos=(pos+1)#maxlen
 										if (mode3) {
-											set storeloc=instructions(pos)#maxlen
+											set storeloc=instructions($i(pos))#maxlen
 										} else {
 											// ???
-											set storeloc=instructions(pos)#maxlen
+											set storeloc=instructions($i(pos))#maxlen
 										}
 									}
 								}
-								set pos=(pos+1)
-								if inst=99 {
-									set haltfound=1
-									quit
-								} elseif inst=1 {
+								if inst=1 {
 									set instructions(storeloc)=val1+val2
 								} elseif inst=2 {
 									set instructions(storeloc)=val1*val2
@@ -857,11 +812,11 @@ ClassMethod D7P2(input="",debug=0) As %String
 									quit
 								} elseif inst=5 {
 									if val1'=0 {
-										set pos=val2
+										set pos=val2-1
 									}
 								} elseif inst=6 {
 									if val1=0 {
-										set pos=val2
+										set pos=val2-1
 									}
 								} elseif inst=7 {
 									if val1<val2 {
@@ -1002,22 +957,17 @@ ClassMethod D9P1(input="",debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
-	set pos=0
-	
+	set pos=-1
 	set inputval=1
 	set relativebase=0
 	
 	while 1 {
-		set inst=instructions(pos)
+		set inst=instructions($i(pos))
+		quit:inst=99
 		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
-		quit:inst=99
-		set pos=(pos+1)
 		// ??? inst=4
 		zw:debug inst
 		zw:debug mode1
@@ -1027,48 +977,43 @@ ClassMethod D9P1(input="",debug=0) As %String
 			set offset=0
 			set:mode1=2 offset=relativebase
 			if (inst=3) {
-				set val1=$g(instructions(pos),0)+offset
+				set val1=$g(instructions($i(pos)),0)+offset
 			} else {
-				set val1=$g(instructions($g(instructions(pos),0)+offset),0)
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			}	
 		} elseif ((mode1) || (inst=3) || (inst=4)) {
-			set val1=$g(instructions(pos),0)
+			set val1=$g(instructions($i(pos)),0)
 		} else {
-			set val1=$g(instructions($g(instructions(pos))),0)
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
 		}
 		zw:debug val1
-		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
-			set pos=(pos+1)
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 			if mode2=2 {
 				set offset=0
 				set:mode2=2 offset=relativebase
-				set val2=$g(instructions($g(instructions(pos),0)+offset),0)
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			} elseif mode2 {
-				set val2=$g(instructions(pos),0)
+				set val2=$g(instructions($i(pos)),0)
 			} else {
-				set val2=$g(instructions($g(instructions(pos),0)),0)
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
 			}
 			zw:debug val2
 			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-				set pos=(pos+1)#maxlen
 				if mode3=2 {
 					set offset=0
 					set:mode3=2 offset=relativebase
-					set storeloc=$g(instructions(pos),0)+offset
-					//set storeloc=$g(instructions(pos),0)+offset
+					set storeloc=$g(instructions($i(pos)),0)+offset
+					//set storeloc=$g(instructions($i(pos)),0)+offset
 				} elseif (mode3) {
-					set storeloc=$g(instructions(pos),0)
+					set storeloc=$g(instructions($i(pos)),0)
 				} else {
 					// ???
-					set storeloc=$g(instructions(pos),0)
+					set storeloc=$g(instructions($i(pos)),0)
 				}
 				zw:debug storeloc
 			}
 		}
-		set pos=(pos+1)
-		if inst=99 {
-			quit
-		} elseif inst=1 {
+		if inst=1 {
 			set instructions(storeloc)=val1+val2
 		} elseif inst=2 {
 			set instructions(storeloc)=val1*val2
@@ -1076,17 +1021,18 @@ ClassMethod D9P1(input="",debug=0) As %String
 			set instructions(val1)=inputval
 		} elseif inst=4 {
 			if mode1 {
-				zw val1
+				set res=val1
 			} else {
-				zw instructions(val1)
+				set res=instructions(val1)
 			}
+			w res,!
 		} elseif inst=5 {
 			if val1'=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=6 {
 			if val1=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=7 {
 			if val1<val2 {
@@ -1107,7 +1053,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 		break:debug
 	}
 	
-	quit instructions(0)
+	quit res
 }
 
 ClassMethod D9P2(input="",debug=0) As %String
@@ -1127,22 +1073,17 @@ ClassMethod D9P2(input="",debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
-	set pos=0
-	
+	set pos=-1
 	set inputval=2
 	set relativebase=0
 	
 	while 1 {
-		set inst=instructions(pos)
+		set inst=instructions($i(pos))
+		quit:inst=99
 		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
 		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
 		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
 		set inst=inst#100
-		quit:inst=99
-		set pos=(pos+1)
 		// ??? inst=4
 		zw:debug inst
 		zw:debug mode1
@@ -1152,48 +1093,43 @@ ClassMethod D9P2(input="",debug=0) As %String
 			set offset=0
 			set:mode1=2 offset=relativebase
 			if (inst=3) {
-				set val1=$g(instructions(pos),0)+offset
+				set val1=$g(instructions($i(pos)),0)+offset
 			} else {
-				set val1=$g(instructions($g(instructions(pos),0)+offset),0)
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			}	
 		} elseif ((mode1) || (inst=3) || (inst=4)) {
-			set val1=$g(instructions(pos),0)
+			set val1=$g(instructions($i(pos)),0)
 		} else {
-			set val1=$g(instructions($g(instructions(pos))),0)
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
 		}
 		zw:debug val1
-		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)  || (inst=99)) {
-			set pos=(pos+1)
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
 			if mode2=2 {
 				set offset=0
 				set:mode2=2 offset=relativebase
-				set val2=$g(instructions($g(instructions(pos),0)+offset),0)
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
 			} elseif mode2 {
-				set val2=$g(instructions(pos),0)
+				set val2=$g(instructions($i(pos)),0)
 			} else {
-				set val2=$g(instructions($g(instructions(pos),0)),0)
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
 			}
 			zw:debug val2
 			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-				set pos=(pos+1)
 				if mode3=2 {
 					set offset=0
 					set:mode3=2 offset=relativebase
-					set storeloc=$g(instructions(pos),0)+offset
-					//set storeloc=$g(instructions(pos),0)+offset
+					set storeloc=$g(instructions($i(pos)),0)+offset
+					//set storeloc=$g(instructions($i(pos)),0)+offset
 				} elseif (mode3) {
-					set storeloc=$g(instructions(pos),0)
+					set storeloc=$g(instructions($i(pos)),0)
 				} else {
 					// ???
-					set storeloc=$g(instructions(pos),0)
+					set storeloc=$g(instructions($i(pos)),0)
 				}
 				zw:debug storeloc
 			}
 		}
-		set pos=(pos+1)
-		if inst=99 {
-			quit
-		} elseif inst=1 {
+		if inst=1 {
 			set instructions(storeloc)=val1+val2
 		} elseif inst=2 {
 			set instructions(storeloc)=val1*val2
@@ -1201,17 +1137,18 @@ ClassMethod D9P2(input="",debug=0) As %String
 			set instructions(val1)=inputval
 		} elseif inst=4 {
 			if mode1 {
-				zw val1
+				set res=val1
 			} else {
-				zw instructions(val1)
+				set res=instructions(val1)
 			}
+			w res,!
 		} elseif inst=5 {
 			if val1'=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=6 {
 			if val1=0 {
-				set pos=val2
+				set pos=val2-1
 			}
 		} elseif inst=7 {
 			if val1<val2 {
@@ -1228,11 +1165,9 @@ ClassMethod D9P2(input="",debug=0) As %String
 		} elseif inst=9 {
 			set relativebase=relativebase+val1
 		}
-		
-		//break:debug
 	}
 	
-	quit instructions(0)
+	quit res
 }
 
 ClassMethod DXP1(input) As %String
