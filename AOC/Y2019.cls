@@ -1167,7 +1167,253 @@ ClassMethod D9P2(input="",debug=0) As %String
 	quit res
 }
 
-ClassMethod DXP1(input) As %String
+ClassMethod D10P1(input) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(10,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		for i=0:1:$length(l)-1 {
+			if $e(l,i+1)="#" {
+				set map(pos-1,i)=$e(l,i+1)
+			}	
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set max=0
+	set maxX=0
+	set maxY=0
+	set y=$o(map(""))
+	while y'="" {
+		set x=$o(map(y,""))
+		while x'="" {
+			k temp
+			set temp=0
+			set tempy=$o(map(""))
+			while tempy'="" {
+				set tempx=$o(map(tempy,""))
+				while tempx'="" {
+					if tempx=x {
+						if tempy=y {
+						} elseif tempy<y {
+							set slope="up"
+						} elseif tempy>y {
+							set slope="down"
+						}
+					} elseif tempy=y {
+						if tempx<x {
+							set slope="right"
+						} elseif tempx>x {
+							set slope="left"
+						}
+					} else {
+						set dy=tempy-y
+						set dx=tempx-x
+						set slope=dy/dx
+						if tempx>x {
+							set slope="R"_slope
+						} else {
+							set slope="L"_slope
+						}
+					}
+					
+					if ((x=0) && (y=-1)) {
+						zw tempx
+						zw tempy
+						zw slope
+						zw temp
+						break
+					}
+					if (($g(slope)'="") && ('$d(temp(slope)))) {
+						set temp=$i(temp)
+						set temp(slope)=1
+					}
+					set tempx=$o(map(tempy,tempx))
+				}
+				set tempy=$o(map(tempy))
+			}
+			
+			if max<temp {
+				set max=temp
+				set maxX=x
+				set maxY=y
+			}
+			
+			set x=$o(map(y,x))
+		}
+		set y=$o(map(y))
+	}
+	
+	zw max
+	zw maxX
+	zw maxY
+	
+	quit res
+}
+
+ClassMethod D10P2(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(10,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		for i=0:1:$length(l)-1 {
+			if $e(l,i+1)="#" {
+				set map(pos-1,i)=$e(l,i+1)
+			}	
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	set vapcount=0
+	set max=0
+	set maxX=0
+	set maxY=0
+	
+	while vapcount<200 {
+		if vapcount=0 {
+			set y=$o(map(""))
+		} else {
+			set y=maxY
+		}
+		while y'="" {
+			if vapcount=0 {
+				set x=$o(map(y,""))
+			} else {
+				set x=maxX
+			}
+			while x'="" {
+				k temp
+				set temp=0
+				set tempy=$o(map(""))
+				while tempy'="" {
+					set tempx=$o(map(tempy,""))
+					while tempx'="" {
+						if tempx=x {
+							if tempy=y {
+								k slope
+							} elseif tempy<y {
+								set slope="a"
+							} elseif tempy>y {
+								set slope="g"
+							}
+						} elseif tempy=y {
+							if tempx<x {
+								set slope="e"
+							} elseif tempx>x {
+								set slope="c"
+							}
+						} else {
+							set dy=tempy-y
+							set dx=tempx-x
+							set slope=dy/dx
+							if tempx>x {
+								if tempy<y {
+									set slope="b,"_slope
+								} else {
+									set slope="d,"_slope
+								}
+							} else {
+								if tempy<y {
+									set slope="h,"_slope
+								} else {
+									set slope="f,"_slope
+								}
+							}
+						}
+						
+						if ($g(slope)'="") {
+							if $l(slope,",")>1 {
+								if '$d(temp($p(slope,",",1),$p(slope,",",2))) {
+									set temp=$i(temp)
+									set temp($p(slope,",",1),$p(slope,",",2))=$lb(tempx,tempy)
+								} else {
+									set olddistance=($zabs($lg(temp($p(slope,",",1),$p(slope,",",2)),2)-y)+$zabs($lg(temp($p(slope,",",1),$p(slope,",",2)),1)-x))
+									set newdistance=($zabs(tempy-y)+$zabs(tempx-x))
+									if newdistance<olddistance {
+										set temp($p(slope,",",1),$p(slope,",",2))=$lb(tempx,tempy)
+									}
+								}
+							} else {
+								if '$d(temp(slope)) {
+									set temp=$i(temp)
+									set temp(slope)=$lb(tempx,tempy)
+								} else {
+									set olddistance=($zabs($lg(temp(slope),2)-y)+$zabs($lg(temp(slope),1)-x))
+									set newdistance=($zabs(tempy-y)+$zabs(tempx-x))
+									if newdistance<olddistance {
+										set temp(slope)=$lb(tempx,tempy)
+									}
+								}
+							}
+						}
+						set tempx=$o(map(tempy,tempx))
+					}
+					set tempy=$o(map(tempy))
+				}
+				
+				if max<temp {
+					k max
+					merge max=temp
+					set maxX=x
+					set maxY=y
+				}
+				quit:vapcount'=0
+				set x=$o(map(y,x))
+			}
+			quit:vapcount'=0
+			set y=$o(map(y))
+		}
+		
+		zw:debug max
+		
+		set vap1=$o(max(""))
+		while vap1'="" {
+			set vap2=$o(max(vap1,""))
+			if $d(max(vap1))=1 {
+				set tempx=$lg(max(vap1),1)
+				set tempy=$lg(max(vap1),2)
+				k map(tempy,tempx)
+				set vapcount=$i(vapcount)
+				zw:debug vap1
+				w:debug "vaporize #"_vapcount_" "_tempx_","_tempy,!
+				if vapcount=200 {
+					set res=(tempx*100)+tempy
+					quit
+				}
+				set vap2=$o(max(vap1,vap2))
+			}
+			while vap2'="" {
+				set tempx=$lg(max(vap1,vap2),1)
+				set tempy=$lg(max(vap1,vap2),2)
+				k map(tempy,tempx)
+				set vapcount=$i(vapcount)
+				zw:debug vap1
+				zw:debug vap2
+				w:debug "vaporize #"_vapcount_" "_tempx_","_tempy,!
+				if vapcount=200 {
+					set res=(tempx*100)+tempy
+					quit
+				}
+				set vap2=$o(max(vap1,vap2))
+			}
+			quit:vapcount=200
+			set vap1=$o(max(vap1))
+		}
+	}
+	
+	quit res
+}
+
+ClassMethod DXP1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
 	
