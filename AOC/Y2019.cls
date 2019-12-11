@@ -926,16 +926,7 @@ ClassMethod D8P2(input) As %String
 		}
 	}
 	
-	for row=0:1:5 {
-		for col=0:1:24 {
-			if res(row,col)=1 {
-				w res(row,col)
-			} else {
-				w " "
-			}
-		}
-		w !
-	}
+	do ##class(AOC.Y2019).Print2DArray(.res,1)
 	
 	quit ""
 }
@@ -1744,35 +1735,7 @@ ClassMethod D11P2(input="",debug=0) As %String
 		}
 	}
 	
-	set minX=99999
-	set minY=99999
-	set maxX=0
-	set maxY=0
-	set tempY=$o(map(""))
-	while tempY'="" {
-		set tempX=$o(map(tempY,""))
-		while tempX'="" {
-			set:maxX<tempX maxX=tempX
-			set:maxY<tempY maxY=tempY
-			set:minX>tempX minX=tempX
-			set:minY>tempX minY=tempY
-			
-			set tempX=$o(map(tempY,tempX))
-		}
-		
-		set tempY=$o(map(tempY))
-	}
-	
-	for row=minY:1:maxY {
-		for col=minX:1:maxX {
-			if $g(map(row,col))=1 {
-				w "X"
-			} else {
-				w " "
-			}
-		}
-		w !
-	}
+	do ##class(AOC.Y2019).Print2DArray(.map,1)
 	
 	quit ""
 }
