@@ -1413,6 +1413,370 @@ ClassMethod D10P2(input,debug=0) As %String
 	quit res
 }
 
+ClassMethod D11P1(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(11,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set painted=0
+	set curY=0
+	set curX=0
+	set facing="U"
+	set done=0
+	set pos=-1
+	set relativebase=0
+	set outnum=0
+
+	while 1 {
+		set inputval=$G(map(curY,curX),0)
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		// ??? inst=4
+		zw:debug inst
+		zw:debug mode1
+		zw:debug relativebase
+		zw:debug pos
+		if mode1=2 {
+			set offset=0
+			set offset=relativebase
+			if (inst=3) {
+				set val1=$g(instructions($i(pos)),0)+offset
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			}	
+		} elseif ((mode1) || (inst=3) || (inst=4)) {
+			set val1=$g(instructions($i(pos)),0)
+		} else {
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
+		}
+		zw:debug val1
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+			if mode2=2 {
+				set offset=0
+				set offset=relativebase
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			} elseif mode2 {
+				set val2=$g(instructions($i(pos)),0)
+			} else {
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+			}
+			zw:debug val2
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				if mode3=2 {
+					set offset=0
+					set offset=relativebase
+					set storeloc=$g(instructions($i(pos)),0)+offset
+				} elseif (mode3) {
+					set storeloc=$g(instructions($i(pos)),0)
+				} else {
+					// ???
+					set storeloc=$g(instructions($i(pos)),0)
+				}
+				zw:debug storeloc
+			}
+		}
+		if inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set instructions(val1)=inputval
+		} elseif inst=4 {
+			if mode1 {
+				set res=val1
+			} else {
+				set res=instructions(val1)
+			}
+			//w res,!
+			if (outnum#2)=0 {
+				set:$g(map(curY,curX))="" painted=$i(painted)
+				if res=0 {
+					w:debug "paint black",!
+					set map(curY,curX)=0
+				} else {
+					w:debug "paint white",!
+					set map(curY,curX)=1
+				}
+			} else {
+				set tempdir=""
+				if res=0 {
+					w:debug "turn left",!
+					if facing="U" {
+						set facing="L"
+					} elseif facing="L" {
+						set facing="D"
+					} elseif facing="D" {
+						set facing="R"
+					} elseif facing="R" {
+						set facing="U"
+					}
+				} else {
+					w:debug "turn right",!
+					if facing="U" {
+						set facing="R"
+					} elseif facing="R" {
+						set facing="D"
+					} elseif facing="D" {
+						set facing="L"
+					} elseif facing="L" {
+						set facing="U"
+					}
+				}
+				if facing="U" {
+					set curY=curY-1
+				} elseif facing="R" {
+					set curX=curX+1
+				} elseif facing="D" {
+					set curY=curY+1
+				} elseif facing="L" {
+					set curX=curX-1
+				}
+			}
+			set outnum=$i(outnum)
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2-1
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2-1
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=9 {
+			set relativebase=relativebase+val1
+		}
+	}
+	
+	quit painted
+}
+
+ClassMethod D11P2(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(11,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set painted=0
+	set curY=0
+	set curX=0
+	set map(0,0)=1
+	set paintedstart=0
+	set facing="U"
+	set done=0
+	set pos=-1
+	set relativebase=0
+	set outnum=0
+
+	while 1 {
+		set inputval=$G(map(curY,curX),0)
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		// ??? inst=4
+		zw:debug inst
+		zw:debug mode1
+		zw:debug relativebase
+		zw:debug pos
+		if mode1=2 {
+			set offset=0
+			set offset=relativebase
+			if (inst=3) {
+				set val1=$g(instructions($i(pos)),0)+offset
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			}	
+		} elseif ((mode1) || (inst=3) || (inst=4)) {
+			set val1=$g(instructions($i(pos)),0)
+		} else {
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
+		}
+		zw:debug val1
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+			if mode2=2 {
+				set offset=0
+				set offset=relativebase
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			} elseif mode2 {
+				set val2=$g(instructions($i(pos)),0)
+			} else {
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+			}
+			zw:debug val2
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				if mode3=2 {
+					set offset=0
+					set offset=relativebase
+					set storeloc=$g(instructions($i(pos)),0)+offset
+				} elseif (mode3) {
+					set storeloc=$g(instructions($i(pos)),0)
+				} else {
+					// ???
+					set storeloc=$g(instructions($i(pos)),0)
+				}
+				zw:debug storeloc
+			}
+		}
+		if inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set instructions(val1)=inputval
+		} elseif inst=4 {
+			if mode1 {
+				set res=val1
+			} else {
+				set res=instructions(val1)
+			}
+			//w res,!
+			if (outnum#2)=0 {
+				set:$g(map(curY,curX))="" painted=$i(painted)
+				if ((curY=0)&&(curX=0)&&(paintedstart=0)) {
+					set paintedstart=1
+					set painted=$i(painted)
+				}
+				if res=0 {
+					w:debug "paint black",!
+					set map(curY,curX)=0
+				} else {
+					w:debug "paint white",!
+					set map(curY,curX)=1
+				}
+			} else {
+				set tempdir=""
+				if res=0 {
+					w:debug "turn left",!
+					if facing="U" {
+						set facing="L"
+					} elseif facing="L" {
+						set facing="D"
+					} elseif facing="D" {
+						set facing="R"
+					} elseif facing="R" {
+						set facing="U"
+					}
+				} else {
+					w:debug "turn right",!
+					if facing="U" {
+						set facing="R"
+					} elseif facing="R" {
+						set facing="D"
+					} elseif facing="D" {
+						set facing="L"
+					} elseif facing="L" {
+						set facing="U"
+					}
+				}
+				if facing="U" {
+					set curY=curY-1
+				} elseif facing="R" {
+					set curX=curX+1
+				} elseif facing="D" {
+					set curY=curY+1
+				} elseif facing="L" {
+					set curX=curX-1
+				}
+			}
+			set outnum=$i(outnum)
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2-1
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2-1
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=9 {
+			set relativebase=relativebase+val1
+		}
+	}
+	
+	set minX=99999
+	set minY=99999
+	set maxX=0
+	set maxY=0
+	set tempY=$o(map(""))
+	while tempY'="" {
+		set tempX=$o(map(tempY,""))
+		while tempX'="" {
+			set:maxX<tempX maxX=tempX
+			set:maxY<tempY maxY=tempY
+			set:minX>tempX minX=tempX
+			set:minY>tempX minY=tempY
+			
+			set tempX=$o(map(tempY,tempX))
+		}
+		
+		set tempY=$o(map(tempY))
+	}
+	
+	for row=minY:1:maxY {
+		for col=minX:1:maxX {
+			if $g(map(row,col))=1 {
+				w "X"
+			} else {
+				w " "
+			}
+		}
+		w !
+	}
+	
+	quit ""
+}
+
 ClassMethod DXP1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
