@@ -65,4 +65,35 @@ ClassMethod Print2DArray(ByRef pArray,pPrintChar)
 	}
 }
 
+ClassMethod LCM(pFactors...) As %Integer
+{
+	Set tRes=1
+	Set tMax=0
+	
+	For i=1:1:pFactors-1 {
+		If pFactors(i)>tMax {
+			Set tMax=pFactors(i)
+		}
+	}
+	
+	For i=2:1:tMax {
+		Set tReset=0
+		For j=1:1:pFactors {
+			If ((pFactors(j)/i)=(pFactors(j)\i)) {
+				Set pFactors(j)=pFactors(j)/i
+				Set:'tReset tFactors=$i(tFactors)
+				Set tFactors(tFactors)=i
+				Set tReset=1
+			}
+		}
+		Set:tReset i=1
+	}
+	
+	For i=1:1:tFactors {
+		set tRes=tRes*tFactors(i)
+	}
+	
+	Quit tRes
+}
+
 }
