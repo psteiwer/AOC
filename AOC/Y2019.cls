@@ -1875,36 +1875,7 @@ ClassMethod D12P2(input,debug=0) As %String
 			zw:debug zRepeat
 		}
 		if xRepeat&&yRepeat&&zRepeat {
-			set res=0
-			set max=0
-			if ((xRepeat>yRepeat)&&(xRepeat>zRepeat)) {
-				set max=xRepeat
-			} elseif ((yRepeat>zRepeat)&&(yRepeat>xRepeat)) {
-				set max=yRepeat
-			} else {
-				set max=zRepeat
-			}
-			for i=2:1:max {
-				if (((xRepeat/i)=(xRepeat\i))||((yRepeat/i)=(yRepeat\i))||((zRepeat/i)=(zRepeat\i))) {
-					zw:debug i
-					set:(xRepeat/i)=(xRepeat\i) xRepeat=xRepeat/i
-					zw:debug xRepeat
-					set:(yRepeat/i)=(yRepeat\i) yRepeat=yRepeat/i
-					zw:debug yRepeat
-					set:(zRepeat/i)=(zRepeat\i) zRepeat=zRepeat/i
-					zw:debug zRepeat
-					set factors($i(factors))=i
-					set i=1
-				}
-			}
-			
-			zw:debug factors
-			
-			set res=1
-			for i=1:1:factors {
-				set res=res*factors(i)
-			}
-			
+			set res=##class(AOC.Y2019).LCM(xRepeat,yRepeat,zRepeat)
 			set done=1
 		}
 	}
