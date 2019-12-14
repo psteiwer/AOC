@@ -2171,6 +2171,175 @@ ClassMethod D13P2(input="",withui=0,debug=0) As %String
 	quit $p(res,",",*)
 }
 
+ClassMethod D14P1(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(14,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,"=>",.a,.b)
+		set a=$lfs(a)
+		set tempb=$zstrip(b,"<>W")
+		set tempbamount=$p(tempb," ",1)
+		set tempbmat=$p(tempb," ",2)
+		set materials(tempbmat)=tempbamount
+		for i=1:1:$ll(a) {
+			set tempa=$zstrip($lg(a,i),"<>W")
+			set tempaamount=$p(tempa," ",1)
+			set tempamat=$p(tempa," ",2)
+			set materials(tempbmat,tempamat)=tempaamount
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	zw:debug materials
+	
+	set noupdates=0
+	set resources("FUEL")=1
+	while 'noupdates {
+		set noupdates=1
+		set resource=$o(resources(""))
+		while resource'="" {
+			set tempresourceval=$G(resources(resource))
+			set val=$G(materials(resource))
+			set multiplier=0
+			set:val>0 multiplier=$SYSTEM.SQL.CEILING(tempresourceval/val)
+			//zw tempresource
+			if resource'="ORE" {
+				set tempresource=$o(materials(resource,""))
+				while tempresource'="" {
+					set val2=materials(resource,tempresource)
+					set newresources(tempresource)=val2*multiplier
+					
+					set tempresource=$o(materials(resource,tempresource))
+				}
+			}
+			zw:debug resources
+			zw:debug newresources
+			zw:debug resource
+			zw:debug multiplier
+			if multiplier>0 {
+				set noupdates=0
+				set resources(resource)=$i(resources(resource),-materials(resource)*multiplier)
+			}
+			set tempresource=$o(newresources(""))
+			while tempresource'="" {
+				set resources(tempresource)=$i(resources(tempresource),newresources(tempresource))
+				
+				set tempresource=$o(newresources(tempresource))
+			}
+			zw:debug resources
+			
+			k newresources
+			
+			set resource=$o(resources(resource))
+		}
+	}
+	
+	zw:debug resources
+	
+	
+	quit resources("ORE")
+}
+
+ClassMethod D14P2(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(14,.input)
+	set fuelbase=##class(AOC.Y2019).D14P1(.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,"=>",.a,.b)
+		set a=$lfs(a)
+		set tempb=$zstrip(b,"<>W")
+		set tempbamount=$p(tempb," ",1)
+		set tempbmat=$p(tempb," ",2)
+		set materials(tempbmat)=tempbamount
+		for i=1:1:$ll(a) {
+			set tempa=$zstrip($lg(a,i),"<>W")
+			set tempaamount=$p(tempa," ",1)
+			set tempamat=$p(tempa," ",2)
+			set materials(tempbmat,tempamat)=tempaamount
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set done=0
+	set min=0
+	set max=1000000000000
+	set fueltest=1000000000000
+	while 'done {
+		set res=$i(res)
+		set noupdates=0
+		k resources
+		set resources("FUEL")=fueltest
+		while 'noupdates {
+			set noupdates=1
+			set resource=$o(resources(""))
+			while resource'="" {
+				set tempresourceval=$G(resources(resource))
+				set val=$G(materials(resource))
+				set multiplier=0
+				set:val>0 multiplier=$SYSTEM.SQL.CEILING(tempresourceval/val)
+				//zw tempresource
+				if resource'="ORE" {
+					set tempresource=$o(materials(resource,""))
+					while tempresource'="" {
+						set val2=materials(resource,tempresource)
+						set newresources(tempresource)=val2*multiplier
+						
+						set tempresource=$o(materials(resource,tempresource))
+					}
+				}
+				if multiplier>0 {
+					set noupdates=0
+					set resources(resource)=$i(resources(resource),-materials(resource)*multiplier)
+				}
+				set tempresource=$o(newresources(""))
+				while tempresource'="" {
+					set resources(tempresource)=$i(resources(tempresource),newresources(tempresource))
+					
+					set tempresource=$o(newresources(tempresource))
+				}
+				
+				k newresources
+				
+				set resource=$o(resources(resource))
+			}
+		}
+		
+		if $g(resources("ORE"))<1000000000000 {
+			if ($g(resources("ORE"))+fuelbase)>1000000000000 {
+				set res=fueltest
+				set done=1
+				quit
+			}
+			zw:debug fueltest
+			w:debug "too low",!
+			set min=fueltest
+			//break
+			set fueltest=(((max-min)*.5)\1)+min
+		} else {
+			if ($g(resources("ORE"))-fuelbase)<1000000000000 {
+				set res=fueltest-1
+				set done=1
+				quit
+			}
+			zw:debug fueltest
+			w:debug "too high",!
+			set max=fueltest
+			//break
+			set fueltest=fueltest-((max-min)\2)
+		}
+	}
+	
+	quit res
+}
+
 ClassMethod DXP1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
