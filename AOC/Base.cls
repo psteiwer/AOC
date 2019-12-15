@@ -32,7 +32,7 @@ ClassMethod ParseString(pString As %String = "", pDelimiter As %String = "", ByR
 	}
 }
 
-ClassMethod Print2DArray(ByRef pArray,pPrintChar)
+ClassMethod Print2DArray(ByRef pArray,pPrintChar,highlightx=0,highlighty=0)
 {
 	set minX=99999
 	set minY=99999
@@ -45,7 +45,7 @@ ClassMethod Print2DArray(ByRef pArray,pPrintChar)
 			set:maxX<tempX maxX=tempX
 			set:maxY<tempY maxY=tempY
 			set:minX>tempX minX=tempX
-			set:minY>tempX minY=tempY
+			set:minY>tempY minY=tempY
 			
 			set tempX=$o(pArray(tempY,tempX))
 		}
@@ -56,7 +56,19 @@ ClassMethod Print2DArray(ByRef pArray,pPrintChar)
 	for row=minY:1:maxY {
 		for col=minX:1:maxX {
 			if $g(pArray(row,col))=pPrintChar {
+				if ((col=0)&&(row=0)) {
+					w *27,"[41m"
+				}
+				if ((highlightx=col)&&(highlighty=row)) {
+					w *27,"[42m"
+				}
 				w $g(pArray(row,col))
+				if ((highlightx=col)&&(highlighty=row)) {
+					w *27,"[47m"
+				}
+				if ((col=0)&&(row=0)) {
+					w *27,"[47m"
+				}
 			} else {
 				w " "
 			}
