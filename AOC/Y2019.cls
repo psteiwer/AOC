@@ -2811,6 +2811,117 @@ ClassMethod D15P2(input="",withui=0,debug=0) As %String
 	quit res-1
 }
 
+ClassMethod D16P1(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(16,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		set count=0
+		for i=1:1:$length(l) {
+			set vals(i)=$e(l,i)
+			set vals=i
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set pattern=3
+	set pattern(0)=0
+	set pattern(1)=1
+	set pattern(2)=0
+	set pattern(3)=-1
+	
+	set numphases=100
+	for phase=1:1:numphases {
+		for pos=1:1:vals {
+			k temppattern
+			//compute temppattern
+			for i=1:1:vals+1 {
+				for j=0:1:pos-1 {
+					continue:((i=1)&&(j=0))
+					set temppattern($i(temppattern))=pattern((i-1)#(pattern+1))
+					quit:temppattern>vals
+				}
+				quit:$G(temppattern)>vals
+			}
+			
+			set tempout=0
+			for pos2=1:1:vals {
+				set tempout=tempout+(vals(pos2)*temppattern(pos2))
+			}
+			set vals(pos)=$zabs(tempout)#10
+		}
+		set res=""
+		w:debug "after phase "_phase,!
+		for i=1:1:8 {
+			set res=res_vals(i)
+		}
+		w:debug res,!
+	}
+	
+	quit res
+}
+
+ClassMethod D16P2(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(16,.input)
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		for i=1:1:$length(l) {
+			set tempvals(i)=$e(l,i)
+			set tempvals=i
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	for i=1:1:10000 {
+		for j=1:1:tempvals {
+			set vals($i(vals))=tempvals(j)
+		}
+	}
+	
+	k tempvals
+	
+	set offset=vals(1)_vals(2)_vals(3)_vals(4)_vals(5)_vals(6)_vals(7)
+	
+	zw:debug offset
+	
+	set phases=100
+	for i=1:1:phases {
+		set pos=vals
+		set sum=0
+		while pos>=offset {
+			set sum=sum+vals(pos)
+			set vals(pos)=$zabs(sum)#10
+			if (pos>6499997)&&debug {
+				zw pos
+				zw sum
+				zw vals(pos)
+				break
+			}
+			
+			set pos=$i(pos,-1)
+		}
+		w:debug "PHASE "_i_" COMPLETE",!
+	}
+	
+	for i=offset+1:1:offset+8 {
+		set res=res_vals(i)
+	}
+	zw:debug res
+	break:debug
+	quit res
+}
+
 ClassMethod DXP1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
