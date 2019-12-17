@@ -32,7 +32,7 @@ ClassMethod ParseString(pString As %String = "", pDelimiter As %String = "", ByR
 	}
 }
 
-ClassMethod Print2DArray(ByRef pArray,pPrintChar,highlightx=0,highlighty=0)
+ClassMethod Print2DArray(ByRef pArray,pPrintChar="",highlightx=0,highlighty=0)
 {
 	set minX=99999
 	set minY=99999
@@ -55,7 +55,7 @@ ClassMethod Print2DArray(ByRef pArray,pPrintChar,highlightx=0,highlighty=0)
 	
 	for row=minY:1:maxY {
 		for col=minX:1:maxX {
-			if $g(pArray(row,col))=pPrintChar {
+			if (pPrintChar="")||(pPrintChar[$g(pArray(row,col))) {
 				if ((col=0)&&(row=0)) {
 					w *27,"[41m"
 				}
