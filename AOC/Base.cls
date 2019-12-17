@@ -108,4 +108,38 @@ ClassMethod LCM(pFactors...) As %Integer
 	Quit tRes
 }
 
+ClassMethod CheckAllDays() As %Status
+{
+	Do $classmethod($classname(),"GetInput","RESULTS",.results)
+	For i=1:1:25 {
+		Try {
+			Set tMethodP1="D"_i_"P1"
+			Set tP1Res=$classmethod($classname(),tMethodP1)
+			Set tP1Expected=results((i*2)-1)
+			If tP1Expected="//skip" {
+				Write tMethodP1_" skipped",!
+			} ElseIf tP1Res'=tP1Expected {
+				Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP1_" not correct. Was: "_tP1Res_". Expected: "_tP1Expected)),!
+			} Else {
+				Write tMethodP1_" OK",!
+			}
+			Set tMethodP2="D"_i_"P2"
+			Set tP2Res=$classmethod($classname(),tMethodP2)
+			Set tP2Expected=results(i*2)
+			If tP2Expected="//skip" {
+				Write tMethodP2_" skipped",!
+			} ElseIf tP2Res'=tP2Expected {
+				Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP2_" not correct. Was: "_tP2Res_". Expected: "_tP2Expected)),!
+			} Else {
+				Write tMethodP2_" OK",!
+			}
+		} Catch ex {
+			// Add handling later, but this should mean that the day is not yet implemented
+			Write $SYSTEM.Status.GetErrorText(ex.AsStatus()),!
+		}
+	}
+	
+	Quit $$$OK
+}
+
 }
