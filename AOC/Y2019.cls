@@ -3464,7 +3464,7 @@ ClassMethod D19P1(input="",debug=0) As %String
 		}
 	}
 	
-	do ##class(AOC.Y2019).Print2DArray(.map)
+	do:debug ##class(AOC.Y2019).Print2DArray(.map)
 	quit res
 }
 
