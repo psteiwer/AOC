@@ -3343,6 +3343,8 @@ ClassMethod D17P2(input="",withui=0,debug=0) As %String
 	quit res
 }
 
+
+
 ClassMethod D19P1(input="",debug=0) As %String
 {
 	if input="" {
@@ -3467,7 +3469,6 @@ ClassMethod D19P1(input="",debug=0) As %String
 	do ##class(AOC.Y2019).Print2DArray(.map)
 	quit res
 }
-
 
 ClassMethod D19P2(input="",debug=0) As %String
 {
