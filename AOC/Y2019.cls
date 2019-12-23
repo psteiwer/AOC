@@ -4150,6 +4150,700 @@ ClassMethod D20P2(input,debug=0) As %String
 	quit res
 }
 
+ClassMethod D21P1(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(21,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	
+	
+	set pos=-1
+	set relativebase=0
+	//set ss="NOT D J,WALK,"
+	//set ss="NOT A J,NOT B T,AND T J,NOT C T,AND T J,AND D J,WALK,"
+	// if 2 tiles away is empty and 4 tiles away is safe, jump
+	// if 3 tiles away is empty and 4 tiles away is safe, jump
+	// if (1 tile away is empty)||(2 tiles away is empty and 4 tiles away is safe)||(3 tiles away is empty and 4 tiles away is safe) = jump
+	set ss="NOT A J,"
+	set ss=ss_"NOT B T,AND D T,"
+	set ss=ss_"OR T J,"
+	set ss=ss_"NOT C T,AND D T,"
+	set ss=ss_"OR T J,"
+	set ss=ss_"WALK,"
+	
+	for i=1:1:$length(ss) {
+		set tempchar=$e(ss,i)
+		if tempchar="," {
+			set inputvals($i(inputvals))=10
+		} else {
+			set inputvals($i(inputvals))=$ascii(tempchar)
+		}	
+	}
+	
+	while 1 {
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		// ??? inst=4
+		zw:debug inst
+		zw:debug mode1
+		zw:debug relativebase
+		zw:debug pos
+		if mode1=2 {
+			set offset=0
+			set offset=relativebase
+			if (inst=3) {
+				set val1=$g(instructions($i(pos)),0)+offset
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			}	
+		} elseif ((mode1) || (inst=3) || (inst=4)) {
+			set val1=$g(instructions($i(pos)),0)
+		} else {
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
+		}
+		zw:debug val1
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+			if mode2=2 {
+				set offset=0
+				set offset=relativebase
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			} elseif mode2 {
+				set val2=$g(instructions($i(pos)),0)
+			} else {
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+			}
+			zw:debug val2
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				if mode3=2 {
+					set offset=0
+					set offset=relativebase
+					set storeloc=$g(instructions($i(pos)),0)+offset
+				} elseif (mode3) {
+					set storeloc=$g(instructions($i(pos)),0)
+				} else {
+					// ???
+					set storeloc=$g(instructions($i(pos)),0)
+				}
+				zw:debug storeloc
+			}
+		}
+		if inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set tempval=inputvals($i(inputpos))
+			set instructions(val1)=tempval
+			set res=res_","_tempval
+		} elseif inst=4 {
+			if mode1 {
+				set res=res_","_val1
+			} else {
+				set res=res_","_instructions(val1)
+			}
+			w res,!
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2-1
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2-1
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=9 {
+			set relativebase=relativebase+val1
+		}
+	}
+	
+	set res=$e(res,2,*)
+	set res=$lfs(res)
+	for i=1:1:$ll(res) {
+		set tempval=$lg(res,i)
+		w $char(tempval)
+		w:tempval=10 $char(13)
+	}
+	
+	zw res
+	quit $lg(res,*)
+}
+
+
+
+ClassMethod D21P2(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(21,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	
+	
+	set pos=-1
+	set relativebase=0
+	
+	// A=1,B=2,C=3,D=4,E=5,F=6,G=7,H=8,i=9
+	// if (2, 5, or 9 is empty) AND (4 AND 8 are free) AND (next 3 are not free)
+	set ss="NOT B J,"
+	set ss=ss_"NOT E T,"
+	set ss=ss_"OR T J,"
+	set ss=ss_"NOT I T,"
+	set ss=ss_"OR T J,"
+	
+	set ss=ss_"AND D J,"
+	set ss=ss_"AND H J,"
+	
+	set ss=ss_"NOT A T,"
+	set ss=ss_"NOT T T,"
+	set ss=ss_"AND B T,"
+	set ss=ss_"AND C T,"
+	set ss=ss_"NOT T T,"
+	set ss=ss_"AND T J,"
+	
+	set ss=ss_"NOT A T,"
+	set ss=ss_"OR T J,"
+	set ss=ss_"RUN,"
+	
+	for i=1:1:$length(ss) {
+		set tempchar=$e(ss,i)
+		if tempchar="," {
+			set inputvals($i(inputvals))=10
+		} else {
+			set inputvals($i(inputvals))=$ascii(tempchar)
+		}	
+	}
+	
+	while 1 {
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		// ??? inst=4
+		zw:debug inst
+		zw:debug mode1
+		zw:debug relativebase
+		zw:debug pos
+		if mode1=2 {
+			set offset=0
+			set offset=relativebase
+			if (inst=3) {
+				set val1=$g(instructions($i(pos)),0)+offset
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			}	
+		} elseif ((mode1) || (inst=3) || (inst=4)) {
+			set val1=$g(instructions($i(pos)),0)
+		} else {
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
+		}
+		zw:debug val1
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+			if mode2=2 {
+				set offset=0
+				set offset=relativebase
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			} elseif mode2 {
+				set val2=$g(instructions($i(pos)),0)
+			} else {
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+			}
+			zw:debug val2
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				if mode3=2 {
+					set offset=0
+					set offset=relativebase
+					set storeloc=$g(instructions($i(pos)),0)+offset
+				} elseif (mode3) {
+					set storeloc=$g(instructions($i(pos)),0)
+				} else {
+					// ???
+					set storeloc=$g(instructions($i(pos)),0)
+				}
+				zw:debug storeloc
+			}
+		}
+		if inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			set tempval=inputvals($i(inputpos))
+			set instructions(val1)=tempval
+			set res=res_","_tempval
+		} elseif inst=4 {
+			if mode1 {
+				set res=res_","_val1
+			} else {
+				set res=res_","_instructions(val1)
+			}
+			w:debug res,!
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2-1
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2-1
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=9 {
+			set relativebase=relativebase+val1
+		}
+	}
+	
+	set res=$e(res,2,*)
+	set res=$lfs(res)
+	for i=1:1:$ll(res) {
+		set tempval=$lg(res,i)
+		w $char(tempval)
+		w:tempval=10 $char(13)
+	}
+	
+	zw res
+	quit $lg(res,*)
+}
+
+ClassMethod D22P1(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(22,.input)
+	
+	set deck=""
+	for i=0:1:10006 {
+		set deck=deck_$lb(i)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		zw l
+		if l["deal into new stack" {
+			set tempdeck=""
+			for i=1:1:$ll(deck) {
+				set tempdeck=$lb($lg(deck,i))_tempdeck
+			}
+			set deck=tempdeck
+		} elseif l["cut " {
+			set tempval=$piece(l,"cut ",2)
+			if tempval>0 {
+				set deck=$list(deck,tempval+1,*)_$list(deck,1,tempval)
+			} else {
+				set tempval=$zabs(tempval)
+				set deck=$list(deck,*-tempval+1,*)_$list(deck,1,*-tempval)
+			}
+		} elseif l["deal with increment " {
+			set tempval=$piece(l,"deal with increment ",2)
+			set count=0
+			set i=0
+			while count<$ll(deck) {
+				set count=$i(count)
+				set $list(tempdeck,((tempval*(count-1))#$ll(deck))+1)=$lg(deck,count)
+			}
+			set deck=tempdeck
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	zw deck
+	for i=1:1:$ll(deck) {
+		if $lg(deck,i)="2019" {
+			set res=i-1
+			quit
+		}
+	}
+	quit res
+}
+
+ClassMethod D23P1(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(23,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	merge originalinstructions=instructions
+	set inputvals=""
+	for i=0:1:49 {
+		set network(i,"input")=$lb(i)
+		set network(i,"output","network")=""
+		
+		merge network(i,"instructions")=instructions
+	}
+	set networknum=-1
+	while 1 {
+		set networknum=$i(networknum)#50
+		
+		w:debug "Processing "_networknum,!
+		if $d(network(networknum,"instructions"))=0 {
+			merge network(networknum,"instructions")=instructions
+		}
+		set pos=$g(network(networknum,"pos"),-1)
+		set relativebase=$g(network(networknum,"relativebase"),0)
+		k instructions
+		merge instructions=network(networknum,"instructions")
+		
+		while 1 {
+			set inst=instructions($i(pos))
+			quit:inst=99
+			set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+			set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+			set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+			set inst=inst#100
+			if mode1=2 {
+				set offset=0
+				set offset=relativebase
+				if (inst=3) {
+					set val1=$g(instructions($i(pos)),0)+offset
+				} else {
+					set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+				}	
+			} elseif ((mode1) || (inst=3) || (inst=4)) {
+				set val1=$g(instructions($i(pos)),0)
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)))),0)
+			}
+			if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+				if mode2=2 {
+					set offset=0
+					set offset=relativebase
+					set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+				} elseif mode2 {
+					set val2=$g(instructions($i(pos)),0)
+				} else {
+					set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+				}
+				if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+					if mode3=2 {
+						set offset=0
+						set offset=relativebase
+						set storeloc=$g(instructions($i(pos)),0)+offset
+					} elseif (mode3) {
+						set storeloc=$g(instructions($i(pos)),0)
+					} else {
+						// ???
+						set storeloc=$g(instructions($i(pos)),0)
+					}
+				}
+			}
+			if inst=1 {
+				set instructions(storeloc)=val1+val2
+			} elseif inst=2 {
+				set instructions(storeloc)=val1*val2
+			} elseif inst=3 {
+				set tempinput=$lg(network(networknum,"input"),1,-1)
+				set instructions(val1)=tempinput
+				if tempinput=-1 {
+					quit
+				}
+				zw:debug network(networknum,"input")
+				zw:debug networknum
+				w:debug "using input "_tempinput,!
+				//break
+				set network(networknum,"input")=$list(network(networknum,"input"),2,*)
+				w:debug "input is now "
+				zw:debug network(networknum,"input")
+			} elseif inst=4 {
+				if mode1 {
+					set res=val1
+				} else {
+					set res=instructions(val1)
+				}
+				set network(networknum,"output")=$i(network(networknum,"output"))
+				if network(networknum,"output")#3=1 {
+					// this is address
+					set network(networknum,"output","network")=res
+				} elseif network(networknum,"output")#3=0 {
+					// this is y
+					set network(networknum,"output","y")=res
+					if network(networknum,"output","network")=255 {
+						return res
+					} else {
+						w:debug "setting output",!
+						zw:debug network(network(networknum,"output","network"),"input")
+						//break
+						set network(network(networknum,"output","network"),"input")=$G(network(network(networknum,"output","network"),"input"),"")_$lb(network(networknum,"output","x"),res)
+						zw:debug network(network(networknum,"output","network"),"input")
+						//break
+					}
+				} elseif network(networknum,"output")#3=2 {
+					// this is x
+					set network(networknum,"output","x")=res
+				}
+			} elseif inst=5 {
+				if val1'=0 {
+					set pos=val2-1
+				}
+			} elseif inst=6 {
+				if val1=0 {
+					set pos=val2-1
+				}
+			} elseif inst=7 {
+				if val1<val2 {
+					set instructions(storeloc)=1
+				} else {
+					set instructions(storeloc)=0
+				}
+			} elseif inst=8 {
+				if val1=val2 {
+					set instructions(storeloc)=1
+				} else {
+					set instructions(storeloc)=0
+				}
+			} elseif inst=9 {
+				set relativebase=relativebase+val1
+			}
+		}
+		set network(networknum,"pos")=pos
+		set network(networknum,"relativebase")=relativebase
+		k network(networknum,"instructions")
+		merge network(networknum,"instructions")=instructions
+	}
+	
+	quit res
+}
+
+ClassMethod D23P2(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(23,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	merge originalinstructions=instructions
+	set inputvals=""
+	for i=0:1:49 {
+		set network(i,"input")=$lb(i)
+		set network(i,"output","network")=""
+		
+		merge network(i,"instructions")=instructions
+	}
+	set networknum=-1
+	set idle1=1
+	set idle2=0
+	set lastidley=""
+	while 1 {
+		if networknum=49 {
+			if idle1 {
+				if idle2 {
+					// release output to address 0
+					set network(0,"input")=network(255,"input")
+					if lastidley=$lg(network(0,"input"),2) {
+						return lastidley
+					}
+					set lastidley=$lg(network(0,"input"),2)
+					set idle1=1
+					set idle2=0
+				} else {
+					set idle2=1
+				}
+			} else {
+				set idle2=0
+			}
+			set idle1=1
+		}
+		
+		set networknum=$i(networknum)#50
+		
+		w:debug "Processing "_networknum,!
+		if $d(network(networknum,"instructions"))=0 {
+			merge network(networknum,"instructions")=instructions
+		}
+		set pos=$g(network(networknum,"pos"),-1)
+		set relativebase=$g(network(networknum,"relativebase"),0)
+		k instructions
+		merge instructions=network(networknum,"instructions")
+		
+		while 1 {
+			set inst=instructions($i(pos))
+			quit:inst=99
+			set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+			set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+			set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+			set inst=inst#100
+			if mode1=2 {
+				set offset=0
+				set offset=relativebase
+				if (inst=3) {
+					set val1=$g(instructions($i(pos)),0)+offset
+				} else {
+					set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+				}	
+			} elseif ((mode1) || (inst=3) || (inst=4)) {
+				set val1=$g(instructions($i(pos)),0)
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)))),0)
+			}
+			if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+				if mode2=2 {
+					set offset=0
+					set offset=relativebase
+					set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+				} elseif mode2 {
+					set val2=$g(instructions($i(pos)),0)
+				} else {
+					set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+				}
+				if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+					if mode3=2 {
+						set offset=0
+						set offset=relativebase
+						set storeloc=$g(instructions($i(pos)),0)+offset
+					} elseif (mode3) {
+						set storeloc=$g(instructions($i(pos)),0)
+					} else {
+						// ???
+						set storeloc=$g(instructions($i(pos)),0)
+					}
+				}
+			}
+			if inst=1 {
+				set instructions(storeloc)=val1+val2
+			} elseif inst=2 {
+				set instructions(storeloc)=val1*val2
+			} elseif inst=3 {
+				set tempinput=$lg(network(networknum,"input"),1,-1)
+				set instructions(val1)=tempinput
+				if tempinput=-1 {
+					quit
+				}
+				zw:debug network(networknum,"input")
+				zw:debug networknum
+				w:debug "using input "_tempinput,!
+				set network(networknum,"input")=$list(network(networknum,"input"),2,*)
+				w:debug "input is now "
+				zw:debug network(networknum,"input")
+			} elseif inst=4 {
+				if mode1 {
+					set res=val1
+				} else {
+					set res=instructions(val1)
+				}
+				set network(networknum,"output")=$i(network(networknum,"output"))
+				if network(networknum,"output")#3=1 {
+					// this is address
+					set network(networknum,"output","network")=res
+				} elseif network(networknum,"output")#3=0 {
+					// this is y
+					set network(networknum,"output","y")=res
+					if network(networknum,"output","network")=255 {
+						set network(network(networknum,"output","network"),"input")=$lb(network(networknum,"output","x"),res)
+					} else {
+						w:debug "setting output",!
+						zw:debug network(network(networknum,"output","network"),"input")
+						//break
+						set network(network(networknum,"output","network"),"input")=$G(network(network(networknum,"output","network"),"input"),"")_$lb(network(networknum,"output","x"),res)
+						zw:debug network(network(networknum,"output","network"),"input")
+						//break
+					}
+				} elseif network(networknum,"output")#3=2 {
+					// this is x
+					set network(networknum,"output","x")=res
+				}
+				set idle1=0
+			} elseif inst=5 {
+				if val1'=0 {
+					set pos=val2-1
+				}
+			} elseif inst=6 {
+				if val1=0 {
+					set pos=val2-1
+				}
+			} elseif inst=7 {
+				if val1<val2 {
+					set instructions(storeloc)=1
+				} else {
+					set instructions(storeloc)=0
+				}
+			} elseif inst=8 {
+				if val1=val2 {
+					set instructions(storeloc)=1
+				} else {
+					set instructions(storeloc)=0
+				}
+			} elseif inst=9 {
+				set relativebase=relativebase+val1
+			}
+		}
+		set network(networknum,"pos")=pos
+		set network(networknum,"relativebase")=relativebase
+		k network(networknum,"instructions")
+		merge network(networknum,"instructions")=instructions
+	}
+	
+	quit res
+}
+
 ClassMethod DXP1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(X,.input)
