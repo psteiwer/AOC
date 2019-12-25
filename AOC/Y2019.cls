@@ -3343,6 +3343,294 @@ ClassMethod D17P2(input="",withui=0,debug=0) As %String
 	quit res
 }
 
+ClassMethod D18P1(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(18,.input)
+	
+	set res=""
+	set posy=""
+	set posx=""
+	set pos=$o(input(""),1,l)
+	set map=-1
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		set map=$i(map)
+		for i=1:1:$length(l) {
+			set tempchar=$e(l,i)
+			set map(map,i-1)=tempchar
+			if tempchar="@" {
+				set posy=map
+				set posx=i-1
+			}
+			if (($ascii(tempchar)>96)&&($ascii(tempchar)<123)) {
+				set keys(tempchar)=$lb(map,i-1)
+			}
+			if (($ascii(tempchar)>64)&&($ascii(tempchar)<91)) {
+				set doors(tempchar)=$lb(map,i-1)
+			}
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	//optimization, loop through map and any . surrounded by 3 # is a dead end, change to #
+	set modified=1
+	set modifiedcount=0
+	while modified {
+		set modified=0
+		for tempy=1:1:$o(map(""),-1)-1 {
+			for tempx=1:1:$o(map(tempy,""),-1)-1 {
+				set isfree=map(tempy,tempx)="."
+				set isdoor=(($ascii(map(tempy,tempx))>=65)&&($ascii(map(tempy,tempx))<=90))
+				if 'isfree&&'isdoor {
+					// if it isnt a . or a door, skip
+					continue
+				}
+				set wallcount=0
+				set:map(tempy+1,tempx)="#" wallcount=$i(wallcount)
+				set:map(tempy-1,tempx)="#" wallcount=$i(wallcount)
+				set:map(tempy,tempx+1)="#" wallcount=$i(wallcount)
+				set:map(tempy,tempx-1)="#" wallcount=$i(wallcount)
+				if wallcount>2 {
+					set map(tempy,tempx)="#"
+					set modified=1
+					set modifiedcount=$i(modifiedcount)
+				}
+			}
+		}
+	}
+	
+	set map(posy,posx)="."
+	set res=##class(AOC.Y2019).D18Fill(debug,.map,.keys,0,5000,$lb("@"),,$lb(posx,posy))
+	
+	quit res
+}
+
+ClassMethod D18Fill(debug, ByRef pMap, ByRef pKeys, pSteps, pMinSteps, pPath, ByRef pKeystrings, pQ1="", pQ2="", pQ3="", pQ4="") As %Integer
+{
+	Quit:pSteps>=pMinSteps pMinSteps
+	merge tMap=pMap
+	merge tKeys=pKeys
+	
+	set done=0
+	set part2=0
+	
+	set sizey=$o(tMap(""),-1)
+	set sizex=$o(tMap(sizey,""),-1)
+	set sizey=$system.SQL.CEILING(sizey/2)
+	set sizex=$system.SQL.CEILING(sizex/2)
+	
+	if pQ1'="" {
+		set tMap($lg(pQ1,2),$lg(pQ1,1))="!"
+	}
+	if pQ2'="" {
+		set part2=1
+		set tMap($lg(pQ2,2),$lg(pQ2,1))="!"
+	}
+	if pQ3'="" {
+		set tMap($lg(pQ3,2),$lg(pQ3,1))="!"
+	}
+	if pQ4'="" {
+		set tMap($lg(pQ4,2),$lg(pQ4,1))="!"
+	}
+	
+	merge tempMap=tMap
+	
+	while 'done {
+		set done=1
+		set tempsteps=$i(tempsteps)
+		Quit:(pSteps+tempsteps)>=pMinSteps
+		set row=$o(tMap(""))
+		while row'="" {
+			set col=$o(tMap(row,""))
+			while col'="" {
+				if tMap(row,col)="!" {
+					for tempcheck=1,2,3,4 {
+						if tempcheck=1 {
+							set y=row-1
+							set x=col
+						} elseif tempcheck=2 {
+							set y=row+1
+							set x=col
+						} elseif tempcheck=3 {
+							set y=row
+							set x=col-1
+						} elseif tempcheck=4 {
+							set y=row
+							set x=col+1
+						}
+						
+						if tMap(y,x)="." {
+							set tempMap(y,x)="!"
+							set done=0
+						} elseif (($ascii(tMap(y,x))>=65)&&($ascii(tMap(y,x))<=90)) {
+							//this is a door, if the key doesnt exist, set to #
+							if '$d(tKeys($$$LOWER(tMap(y,x)))) {
+								set tempMap(y,x)="!"
+								set done=0
+							}
+						} elseif (($ascii(tMap(y,x))>=97)&&($ascii(tMap(y,x))<=122)) {
+							// this is a key
+							set tempkey=tMap(y,x)
+							if part2 {
+								if (tempkey="y")&&($d(tKeys("m"))) {
+									quit
+								}
+							} else {
+								if (tempkey="l")&&($d(tKeys("e"))||$d(tKeys("y"))||$d(tKeys("m"))) {
+									quit
+								}
+							}
+							set pPath=pPath_$lb(tMap(y,x))
+							k tKeys(tempkey)
+							if $d(tKeys)=0 {
+								zw pPath
+								zw pSteps+tempsteps
+								return pSteps+tempsteps
+							}
+							
+							
+							set pMap(y,x)="."
+							k keylist
+							for i=1:1:26 {
+								set $list(keylist,i)=$data(tKeys($char(i+96)))
+							}
+							set keystring=$lts(keylist,,1)
+							if $G(pKeystrings(tempkey,keystring),5000)>(pSteps+tempsteps) {
+								set pKeystrings(tempkey,keystring)=pSteps+tempsteps
+								
+								set tQ1=""
+								set tQ2=""
+								set tQ3=""
+								set tQ4=""
+								if part2 {
+									set tQ1=pQ1
+									set tQ2=pQ2
+									set tQ3=pQ3
+									set tQ4=pQ4
+									if ((x<sizex)&&(y<sizey)) {
+										set tQ1=$lb(x,y)
+									} elseif ((x>sizex)&&(y<sizey)) {
+										set tQ2=$lb(x,y)
+									} elseif ((x>sizex)&&(y>sizey)) {
+										set tQ3=$lb(x,y)
+									} elseif ((x<sizex)&&(y>sizey)) {
+										set tQ4=$lb(x,y)
+									}  
+								} else {
+									set tQ1=$lb(x,y)
+								}
+								set tempres=##class(AOC.Y2019).D18Fill(debug,.pMap,.tKeys,pSteps+tempsteps,pMinSteps,pPath,.pKeystrings,tQ1,tQ2,tQ3,tQ4)
+								set:tempres<pMinSteps pMinSteps=tempres
+							}
+							
+							set pMap(y,x)=tempkey
+							set tempMap(y,x)="#"
+							set done=0
+							
+							
+								
+							//do ##class(AOC.Y2019).Print2DArray(.tMap)
+							//break
+								
+							set tKeys(tempkey)=1
+							set pPath=$list(pPath,1,*-1)
+						}
+					}
+				}
+				set col=$o(tMap(row,col))
+			}
+			set row=$o(tMap(row))
+		}
+		k tMap
+		merge tMap=tempMap
+	}
+	
+	quit pMinSteps
+}
+
+ClassMethod D18P2(input,debug=0) As %String
+{
+	set:$d(input) istest=1
+	do:'$d(input) ##class(AOC.Y2019).GetInput(18,.input)
+	
+	set res=""
+	set posy=""
+	set posx=""
+	set pos=$o(input(""),1,l)
+	set map=-1
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		set map=$i(map)
+		for i=1:1:$length(l) {
+			set tempchar=$e(l,i)
+			set map(map,i-1)=tempchar
+			if tempchar="@" {
+				set posy=map
+				set posx=i-1
+			}
+			if (($ascii(tempchar)>96)&&($ascii(tempchar)<123)) {
+				set keys(tempchar)=$lb(map,i-1)
+			}
+			if (($ascii(tempchar)>64)&&($ascii(tempchar)<91)) {
+				set doors(tempchar)=$lb(map,i-1)
+			}
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	//optimization, loop through map and any . surrounded by 3 # is a dead end, change to #
+	set modified=1
+	set modifiedcount=0
+	while modified {
+		set modified=0
+		for tempy=1:1:$o(map(""),-1)-1 {
+			for tempx=1:1:$o(map(tempy,""),-1)-1 {
+				set isfree=map(tempy,tempx)="."
+				set isdoor=(($ascii(map(tempy,tempx))>=65)&&($ascii(map(tempy,tempx))<=90))
+				if 'isfree&&'isdoor {
+					// if it isnt a . or a door, skip
+					continue
+				}
+				set wallcount=0
+				set:map(tempy+1,tempx)="#" wallcount=$i(wallcount)
+				set:map(tempy-1,tempx)="#" wallcount=$i(wallcount)
+				set:map(tempy,tempx+1)="#" wallcount=$i(wallcount)
+				set:map(tempy,tempx-1)="#" wallcount=$i(wallcount)
+				if wallcount>2 {
+					set map(tempy,tempx)="#"
+					set modified=1
+					set modifiedcount=$i(modifiedcount)
+				}
+			}
+		}
+	}
+	
+	if '$G(istest,0) {
+		set map(posy+1,posx)="#"
+		set map(posy-1,posx)="#"
+		set map(posy,posx+1)="#"
+		set map(posy,posx-1)="#"
+		set map(posy,posx)="#"
+		
+		set map(posy+1,posx+1)="."
+		set map(posy-1,posx+1)="."
+		set map(posy+1,posx-1)="."
+		set map(posy-1,posx-1)="."
+	} else {
+		set posy=$o(map(""),-1)
+		set posx=$o(map(posy,""),-1)
+		set posy=$system.SQL.CEILING(posy/2)
+		set posx=$system.SQL.CEILING(posx/2)
+		do ##class(AOC.Y2019).Print2DArray(.map,,posx,posy)
+	}
+	
+	set res=##class(AOC.Y2019).D18Fill(debug,.map,.keys,0,5000,$lb("@"),,$lb(posx-1,posy-1),$lb(posx+1,posy-1),$lb(posx+1,posy+1),$lb(posx-1,posy+1))
+	
+	quit res
+}
+
 ClassMethod D19P1(input="",debug=0) As %String
 {
 	if input="" {
@@ -4839,6 +5127,377 @@ ClassMethod D23P2(input="",debug=0) As %String
 		set network(networknum,"relativebase")=relativebase
 		k network(networknum,"instructions")
 		merge network(networknum,"instructions")=instructions
+	}
+	
+	quit res
+}
+
+ClassMethod D24P1(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(24,.input)
+	
+	set res=""
+	set map=-1
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		set map=$i(map)
+		for i=1:1:$length(l) {
+			set map(map,i-1)=$e(l,i)
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	zw map
+	
+	do ##class(AOC.Y2019).Print2DArray(.map)
+	
+	// calculate biodiversity and update map
+	set done=0
+	while 'done {
+		set count=-1
+		set biodiversity=0
+		set y=$o(map(""))
+		while y'="" {
+			set x=$o(map(y,""))
+			while x'="" {
+				set count=$i(count)
+				
+				set:map(y,x)="#" biodiversity=biodiversity+(2**count)
+				
+				set adjacent=0
+				if $G(map(y-1,x))="#" {
+					set adjacent=$i(adjacent)
+				}
+				if $G(map(y+1,x))="#" {
+					set adjacent=$i(adjacent)
+				}
+				if $G(map(y,x-1))="#" {
+					set adjacent=$i(adjacent)
+				}
+				if $G(map(y,x+1))="#" {
+					set adjacent=$i(adjacent)
+				}
+				
+				if (map(y,x)="#")&&(adjacent'=1) {
+					set tempmap(y,x)="."
+				} elseif (map(y,x)=".")&&((adjacent=1)||(adjacent=2)) {
+					set tempmap(y,x)="#"
+				} else {
+					set tempmap(y,x)=map(y,x)
+				}
+				
+				set x=$o(map(y,x))
+			}
+			set y=$o(map(y))
+		}
+		
+		if $d(biodiversities(biodiversity)) {
+			set res=biodiversity
+			set done=1
+		}
+		
+		k map
+		merge map=tempmap
+		
+		set biodiversities(biodiversity)=1
+	}
+	
+	quit res
+}
+
+ClassMethod D24P2(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(24,.input)
+	
+	set res=""
+	set map=-1
+	set level=0
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		
+		set map=$i(map)
+		for i=1:1:$length(l) {
+			set map(level,map,i-1)=$e(l,i)
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	zw map
+	
+	do ##class(AOC.Y2019).Print2DArray(.map)
+	
+	set minlevel=-1
+	set maxlevel=1
+	for i=0:1:4 {
+		for j=0:1:4 {
+			set map(1,i,j)="."
+			set map(-1,i,j)="."
+		}
+	}
+	
+	// calculate biodiversity and update map
+	for loop=1:1:200 {
+		set count=-1
+		set numbugs=0
+		set levelnonempty=0
+		set level=$o(map(""))
+		while level'="" {
+			set y=$o(map(level,""))
+			while y'="" {
+				set x=$o(map(level,y,""))
+				while x'="" {
+					set count=$i(count)
+					if ((y=2)&&(x=2)) {
+						set x=$o(map(level,y,x))
+						continue
+					}
+					
+					set adjacent=0
+					if (y=3)&&(x=2) {
+						for i=0:1:4 {
+							if $G(map(level+1,4,i))="#" {
+								set adjacent=$i(adjacent)
+							}
+						}	
+					} elseif (y'=0)&&($G(map(level,y-1,x))="#") {
+						set adjacent=$i(adjacent)
+					} elseif (y=0)&&($G(map(level-1,1,2))="#") {
+						set adjacent=$i(adjacent)
+					}
+					
+					if (y=1)&&(x=2) {
+						for i=0:1:4 {
+							if $G(map(level+1,0,i))="#" {
+								set adjacent=$i(adjacent)
+							}
+						}	
+					} elseif (y'=4)&&($G(map(level,y+1,x))="#") {
+						set adjacent=$i(adjacent)
+					} elseif (y=4)&&($G(map(level-1,3,2))="#") {
+						set adjacent=$i(adjacent)
+					}
+					
+					if (y=2)&&(x=3) {
+						for i=0:1:4 {
+							if $G(map(level+1,i,4))="#" {
+								set adjacent=$i(adjacent)
+							}
+						}	
+					} elseif (x'=0)&&($G(map(level,y,x-1))="#") {
+						set adjacent=$i(adjacent)
+					} elseif (x=0)&&($G(map(level-1,2,1))="#") {
+						set adjacent=$i(adjacent)
+					}
+					
+					if (y=2)&&(x=1) {
+						for i=0:1:4 {
+							if $G(map(level+1,i,0))="#" {
+								set adjacent=$i(adjacent)
+							}
+						}
+					} elseif $G(map(level,y,x+1))="#" {
+						set adjacent=$i(adjacent)
+					} elseif (x=4)&&($G(map(level-1,2,3))="#") {
+						set adjacent=$i(adjacent)
+					}
+					
+					if (map(level,y,x)="#")&&(adjacent'=1) {
+						set tempmap(level,y,x)="."
+					} elseif (map(level,y,x)=".")&&((adjacent=1)||(adjacent=2)) {
+						set tempmap(level,y,x)="#"
+					} else {
+						set tempmap(level,y,x)=map(level,y,x)
+					}
+					
+					set:tempmap(level,y,x)="#" numbugs=$i(numbugs)
+					
+					set x=$o(map(level,y,x))
+				}
+				set y=$o(map(level,y))
+			}
+			
+			if ((level=minlevel)&&($G(numbugs,0)>0)) {
+				set minlevel=minlevel-1
+				for i=0:1:4 {
+					for j=0:1:4 {
+						set tempmap(minlevel,i,j)="."
+					}
+				}
+			} elseif ((level=maxlevel)&&($G(numbugs,0)>0)) {
+				set maxlevel=maxlevel+1
+				for i=0:1:4 {
+					for j=0:1:4 {
+						set tempmap(maxlevel,i,j)="."
+					}
+				}
+			}
+			
+			set level=$o(map(level))
+		}
+		
+		k map
+		merge map=tempmap
+	}
+	
+	zw map
+	quit numbugs
+}
+
+ClassMethod D25P1(input="",debug=0) As %String
+{
+	if input="" {
+		do ##class(AOC.Y2019).GetInput(25,.input)
+	}
+	
+	set res=""
+	set pos=$o(input(""),1,l)
+	set maxlen=0
+	while pos'="" {
+		set maxlen=$l(l,",")
+		for i=0:1:$l(l,",")-1 {
+			set instructions(i)=$p(l,",",i+1)
+		}
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set pos=-1
+	set inputval=""
+	set currentstring=""
+	set relativebase=0
+	set posy=0
+	set posx=0
+	
+	while 1 {
+		set inst=instructions($i(pos))
+		quit:inst=99
+		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
+		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
+		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
+		set inst=inst#100
+		if mode1=2 {
+			set offset=0
+			set offset=relativebase
+			if (inst=3) {
+				set val1=$g(instructions($i(pos)),0)+offset
+			} else {
+				set val1=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			}	
+		} elseif ((mode1) || (inst=3) || (inst=4)) {
+			set val1=$g(instructions($i(pos)),0)
+		} else {
+			set val1=$g(instructions($g(instructions($i(pos)))),0)
+		}
+		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
+			if mode2=2 {
+				set offset=0
+				set offset=relativebase
+				set val2=$g(instructions($g(instructions($i(pos)),0)+offset),0)
+			} elseif mode2 {
+				set val2=$g(instructions($i(pos)),0)
+			} else {
+				set val2=$g(instructions($g(instructions($i(pos)),0)),0)
+			}
+			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
+				if mode3=2 {
+					set offset=0
+					set offset=relativebase
+					set storeloc=$g(instructions($i(pos)),0)+offset
+				} elseif (mode3) {
+					set storeloc=$g(instructions($i(pos)),0)
+				} else {
+					// ???
+					set storeloc=$g(instructions($i(pos)),0)
+				}
+			}
+		}
+		if inst=1 {
+			set instructions(storeloc)=val1+val2
+		} elseif inst=2 {
+			set instructions(storeloc)=val1*val2
+		} elseif inst=3 {
+			if inputval="" {
+				read inputval,!
+				//zw inputval
+				set tempinputval=""
+				for i=1:1:$length(inputval) {
+					set tempinputval=tempinputval_$ascii($e(inputval,i))_","
+				}
+				set tempinputval=tempinputval_"10"
+				//zw tempinputval
+				set inputval=tempinputval
+				if inputval="110,111,114,116,104,10" {
+					set map(posy,posx)="."
+					set posy=posy-1
+					set map(posy,posx)="@"
+				} elseif inputval="115,111,117,116,104,10" {
+					set map(posy,posx)="."
+					set posy=posy+1
+					set map(posy,posx)="@"
+				} elseif inputval="101,97,115,116,10" {
+					set map(posy,posx)="."
+					set posx=posx+1
+					set map(posy,posx)="@"
+				} elseif inputval="119,101,115,116,10" {
+					set map(posy,posx)="."
+					set posx=posx-1
+					set map(posy,posx)="@"
+				}
+			}
+			//w "USING INPUT: "_$piece(inputval,",",1),!
+			set instructions(val1)=$piece(inputval,",",1)
+			set inputval=$piece(inputval,",",2,*)
+		} elseif inst=4 {
+			if mode1 {
+				set res=val1
+			} else {
+				set res=instructions(val1)
+			}
+			if res'=10 {
+				set currentstring=currentstring_$char(res)
+			} else {
+				if $G(posoptions,0)&&(currentstring="") {
+					set posoptions=0
+					//do ##class(AOC.Y2019).Print2DArray(.map,,posx,posy)
+				}
+			
+			
+				if currentstring="Doors here lead:" {
+					set posoptions=1
+				}
+				
+				set laststring=currentstring
+				set currentstring=""
+			}
+			w $char(res)
+			w:res=10 $char(13)
+		} elseif inst=5 {
+			if val1'=0 {
+				set pos=val2-1
+			}
+		} elseif inst=6 {
+			if val1=0 {
+				set pos=val2-1
+			}
+		} elseif inst=7 {
+			if val1<val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=8 {
+			if val1=val2 {
+				set instructions(storeloc)=1
+			} else {
+				set instructions(storeloc)=0
+			}
+		} elseif inst=9 {
+			set relativebase=relativebase+val1
+		}
 	}
 	
 	quit res
