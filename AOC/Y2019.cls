@@ -4538,7 +4538,7 @@ ClassMethod D21P1(input="",debug=0) As %String
 			} else {
 				set res=res_","_instructions(val1)
 			}
-			w res,!
+			w:debug res,!
 		} elseif inst=5 {
 			if val1'=0 {
 				set pos=val2-1
@@ -4568,11 +4568,11 @@ ClassMethod D21P1(input="",debug=0) As %String
 	set res=$lfs(res)
 	for i=1:1:$ll(res) {
 		set tempval=$lg(res,i)
-		w $char(tempval)
-		w:tempval=10 $char(13)
+		w:debug $char(tempval)
+		w:debug&&(tempval=10) $char(13)
 	}
 	
-	zw res
+	zw:debug res
 	quit $lg(res,*)
 }
 
@@ -4726,11 +4726,11 @@ ClassMethod D21P2(input="",debug=0) As %String
 	set res=$lfs(res)
 	for i=1:1:$ll(res) {
 		set tempval=$lg(res,i)
-		w $char(tempval)
-		w:tempval=10 $char(13)
+		w:debug $char(tempval)
+		w:debug&&(tempval=10) $char(13)
 	}
 	
-	zw res
+	zw:debug res
 	quit $lg(res,*)
 }
 
