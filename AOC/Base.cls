@@ -62,7 +62,7 @@ ClassMethod Print2DArray(ByRef pArray,pPrintChar="",highlightx=0,highlighty=0)
 				if ((highlightx=col)&&(highlighty=row)) {
 					w *27,"[42m"
 				}
-				w $g(pArray(row,col))
+				w $g(pArray(row,col)," ")
 				if ((highlightx=col)&&(highlighty=row)) {
 					w *27,"[47m"
 				}
