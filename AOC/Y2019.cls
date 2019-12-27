@@ -4754,7 +4754,7 @@ ClassMethod D22P1(input,debug=0) As %String
 	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,,.l)
-		zw l
+		zw:debug l
 		if l["deal into new stack" {
 			set tempdeck=""
 			for i=1:1:$ll(deck) {
@@ -4783,7 +4783,7 @@ ClassMethod D22P1(input,debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	zw deck
+	zw:debug deck
 	for i=1:1:$ll(deck) {
 		if $lg(deck,i)="2019" {
 			set res=i-1
@@ -4791,6 +4791,41 @@ ClassMethod D22P1(input,debug=0) As %String
 		}
 	}
 	quit res
+}
+
+ClassMethod D22P2(input,debug=0) As %String
+{
+	do:'$d(input) ##class(AOC.Y2019).GetInput(22,.input)
+	
+	set numcards=119315717514047
+	set numshuffles=101741582076661
+	set cardatpos=2020
+	
+	set vals(0)=cardatpos
+	set res=""
+	
+	set pos=$o(input(""),1,l)
+	while pos'="" {
+		do ##class(AOC.Y2019).ParseString(l,,.l)
+		if l["deal into new stack" {
+			set cardatpos=numcards-cardatpos-1
+		} elseif l["cut " {
+			set tempval=$piece(l,"cut ",2)
+			set cardatpos=(cardatpos-tempval)#numcards
+		} elseif l["deal with increment " {
+			set tempval=$piece(l,"deal with increment ",2)
+			set cardatpos=(-(numcards-cardatpos)*tempval)#numcards
+		}
+		
+		set pos=$o(input(pos),1,l)
+	}
+	
+	set vals(1)=cardatpos
+	
+	//94676896952648 - too high
+	//73686896952648 - too low
+
+	quit cardatpos
 }
 
 ClassMethod D23P1(input="",debug=0) As %String
