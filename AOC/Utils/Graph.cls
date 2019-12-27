@@ -30,6 +30,8 @@ Method RemoveNode(pName="") As %Status
 		Set tEdge=$o(..Edges(pName,tEdge))
 	}
 	
+	Kill ..Nodes(pName)
+	
 	Quit tSC
 }
 
