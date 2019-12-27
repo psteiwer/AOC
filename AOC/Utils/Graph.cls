@@ -55,4 +55,29 @@ Method RemoveEdge(pNode1, pNode2) As %Status
 	Quit tSC
 }
 
+Method ShortestDistance(pNode1,pNode2,pDistance=0,ByRef pTested) As %Integer
+{
+	Set tRes=1E18
+	
+	// Recurse through all of pNode1 Edges
+	Set tNode=$o(..Edges(pNode1,""))
+	While tNode'="" {
+		If tNode=pNode2 {
+			// Once pNode2 is found, return total distance
+			Return pDistance+..Edges(pNode1,tNode)
+		} ElseIf '$Data(pTested(pNode1,tNode)) {
+			Merge tTested=pTested
+			Set tTested(pNode1,tNode)=1
+			Set tTested(tNode,pNode1)=1
+			
+			Set tTemp=..ShortestDistance(tNode,pNode2,pDistance+..Edges(pNode1,tNode),.tTested)
+			// If tTemp has a lower value than tRes, update tRes
+			Set:tTemp<tRes tRes=tTemp
+		}
+		Set tNode=$o(..Edges(pNode1,tNode))
+	}
+	
+	Quit tRes
+}
+
 }
