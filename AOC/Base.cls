@@ -115,9 +115,11 @@ ClassMethod CheckAllDays() As %Status
 		Try {
 			For tPart=1:1:2 {
 				Set tMethod="D"_tDay_"P"_tPart
-				Set tExpected=tResults(((tDay-1)*2)+tPart)
+				Set tExpected=$G(tResults(((tDay-1)*2)+tPart),"")
 				If tExpected["//skip" {
 					Write tMethod_" skipped",!
+				} ElseIf tExpected="" {
+					Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,"Day "_tDay_", Part "_tPart_" results not defined.")),!
 				} Else {
 					Set tRes=$classmethod($classname(),tMethod)
 					If tRes'=tExpected {
