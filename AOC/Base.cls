@@ -116,7 +116,7 @@ ClassMethod CheckAllDays() As %Status
 			Set tMethodP1="D"_i_"P1"
 			Set tP1Res=$classmethod($classname(),tMethodP1)
 			Set tP1Expected=results((i*2)-1)
-			If tP1Expected="//skip" {
+			If tP1Expected["//skip" {
 				Write tMethodP1_" skipped",!
 			} ElseIf tP1Res'=tP1Expected {
 				Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP1_" not correct. Was: "_tP1Res_". Expected: "_tP1Expected)),!
@@ -126,7 +126,7 @@ ClassMethod CheckAllDays() As %Status
 			Set tMethodP2="D"_i_"P2"
 			Set tP2Res=$classmethod($classname(),tMethodP2)
 			Set tP2Expected=results(i*2)
-			If tP2Expected="//skip" {
+			If tP2Expected["//skip" {
 				Write tMethodP2_" skipped",!
 			} ElseIf tP2Res'=tP2Expected {
 				Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP2_" not correct. Was: "_tP2Res_". Expected: "_tP2Expected)),!
