@@ -5178,9 +5178,9 @@ ClassMethod D24P1(input,debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	zw map
+	zw:debug map
 	
-	do ##class(AOC.Y2019).Print2DArray(.map)
+	do:debug ##class(AOC.Y2019).Print2DArray(.map)
 	
 	// calculate biodiversity and update map
 	set done=0
@@ -5255,9 +5255,9 @@ ClassMethod D24P2(input,debug=0) As %String
 		set pos=$o(input(pos),1,l)
 	}
 	
-	zw map
+	zw:debug map
 	
-	do ##class(AOC.Y2019).Print2DArray(.map)
+	do:debug ##class(AOC.Y2019).Print2DArray(.map)
 	
 	set minlevel=-1
 	set maxlevel=1
@@ -5372,7 +5372,7 @@ ClassMethod D24P2(input,debug=0) As %String
 		merge map=tempmap
 	}
 	
-	zw map
+	zw:debug map
 	quit numbugs
 }
 
