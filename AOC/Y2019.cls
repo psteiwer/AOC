@@ -1016,7 +1016,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 			} else {
 				set res=instructions(val1)
 			}
-			w res,!
+			w:debug res,!
 		} elseif inst=5 {
 			if val1'=0 {
 				set pos=val2-1
@@ -1129,7 +1129,7 @@ ClassMethod D9P2(input="",debug=0) As %String
 			} else {
 				set res=instructions(val1)
 			}
-			w res,!
+			w:debug res,!
 		} elseif inst=5 {
 			if val1'=0 {
 				set pos=val2-1
