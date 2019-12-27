@@ -328,7 +328,7 @@ ClassMethod D4P2(input) As %String
 	quit res
 }
 
-ClassMethod D5P1(input="") As %String
+ClassMethod D5P1(input="",debug=0) As %String
 {
 	if input="" {
 		do ##class(AOC.Y2019).GetInput(5,.input)
@@ -386,14 +386,14 @@ ClassMethod D5P1(input="") As %String
 			} else {
 				set res=instructions(val1)
 			}
-			w res,!
+			w:debug res,!
 		}
 	}
 	
 	quit res
 }
 
-ClassMethod D5P2(input="") As %String
+ClassMethod D5P2(input="",debug=0) As %String
 {
 	if input="" {
 		do ##class(AOC.Y2019).GetInput(5,.input)
@@ -456,7 +456,7 @@ ClassMethod D5P2(input="") As %String
 			} else {
 				set res=instructions(val1)
 			}
-			w res,!
+			w:debug res,!
 		} elseif inst=5 {
 			if val1'=0 {
 				set pos=val2-1
