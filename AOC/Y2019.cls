@@ -1158,7 +1158,7 @@ ClassMethod D9P2(input="",debug=0) As %String
 	quit res
 }
 
-ClassMethod D10P1(input) As %String
+ClassMethod D10P1(input,debug=0) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(10,.input)
 	
@@ -1213,13 +1213,6 @@ ClassMethod D10P1(input) As %String
 						}
 					}
 					
-					if ((x=0) && (y=-1)) {
-						zw tempx
-						zw tempy
-						zw slope
-						zw temp
-						break
-					}
 					if (($g(slope)'="") && ('$d(temp(slope)))) {
 						set temp=$i(temp)
 						set temp(slope)=1
@@ -1240,11 +1233,11 @@ ClassMethod D10P1(input) As %String
 		set y=$o(map(y))
 	}
 	
-	zw max
-	zw maxX
-	zw maxY
+	zw:debug max
+	zw:debug maxX
+	zw:debug maxY
 	
-	quit res
+	quit max
 }
 
 ClassMethod D10P2(input,debug=0) As %String
