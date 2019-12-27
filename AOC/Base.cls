@@ -115,7 +115,7 @@ ClassMethod CheckAllDays() As %Status
 		Try {
 			For tPart=1:1:2 {
 				Set tMethod="D"_tDay_"P"_tPart
-				Set tExpected=tResults((tDay*2)-1)
+				Set tExpected=tResults(((tDay-1)*2)+tPart)
 				If tExpected["//skip" {
 					Write tMethod_" skipped",!
 				} Else {
