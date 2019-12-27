@@ -110,31 +110,21 @@ ClassMethod LCM(pFactors...) As %Integer
 
 ClassMethod CheckAllDays() As %Status
 {
-	Do $classmethod($classname(),"GetInput","RESULTS",.results)
-	For i=1:1:25 {
+	Do $classmethod($classname(),"GetInput","RESULTS",.tResults)
+	For tDay=1:1:25 {
 		Try {
-			Set tMethodP1="D"_i_"P1"
-			Set tP1Expected=results((i*2)-1)
-			If tP1Expected["//skip" {
-				Write tMethodP1_" skipped",!
-			} Else {
-				Set tP1Res=$classmethod($classname(),tMethodP1)
-				If tP1Res'=tP1Expected {
-					Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP1_" not correct. Was: "_tP1Res_". Expected: "_tP1Expected)),!
+			For tPart=1:1:2 {
+				Set tMethod="D"_tDay_"P"_tPart
+				Set tExpected=tResults((tDay*2)-1)
+				If tExpected["//skip" {
+					Write tMethod_" skipped",!
 				} Else {
-					Write tMethodP1_" OK",!
-				}
-			}
-			Set tMethodP2="D"_i_"P2"
-			Set tP2Expected=results(i*2)
-			If tP2Expected["//skip" {
-				Write tMethodP2_" skipped",!
-			} Else {
-				Set tP2Res=$classmethod($classname(),tMethodP2)
-				If tP2Res'=tP2Expected {
-					Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethodP2_" not correct. Was: "_tP2Res_". Expected: "_tP2Expected)),!
-				} Else {
-					Write tMethodP2_" OK",!
+					Set tRes=$classmethod($classname(),tMethod)
+					If tRes'=tExpected {
+						Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethod_" not correct. Was: "_tRes_". Expected: "_tExpected)),!
+					} Else {
+						Write tMethod_" OK",!
+					}
 				}
 			}
 		} Catch ex {
