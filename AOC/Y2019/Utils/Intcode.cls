@@ -11,6 +11,10 @@ Property Input As %List;
 
 Property Output As %List;
 
+Property Paused As %Boolean [ InitialExpression = 0 ];
+
+Property Finished As %Boolean [ InitialExpression = 0 ];
+
 Method %OnNew(pDay,ByRef pInput="") As %Status
 {
 	Set tSC=$$$OK
@@ -41,11 +45,11 @@ Method LoadInstructions(pDay,ByRef pInput="") As %Status
 	Quit tSC
 }
 
-Method Run(debug=0) As %Status
+Method Run(debug=0,pPauseOnOutput=0) As %Status
 {
 	Set tSC=$$$OK
-	
-	While 1 {
+	Set ..Paused=0
+	While '..Paused {
 		Set tInst=..GetInstruction()
 		quit:tInst=99
 		set tMode1=+$e($replace($j(tInst#100000,5)," ",0),3)
@@ -121,6 +125,7 @@ Method Run(debug=0) As %Status
 			}
 			w:debug res,!
 			d ..AddOutput(res)
+			Set:pPauseOnOutput ..Paused=1
 		} elseif tInst=5 {
 			if val1'=0 {
 				set ..Position=val2-1
@@ -144,6 +149,10 @@ Method Run(debug=0) As %Status
 		} elseif tInst=9 {
 			set ..RelativeBase=..RelativeBase+val1
 		}
+	}
+	
+	If '..Paused {
+		Set ..Finished=1
 	}
 	
 	Quit tSC
