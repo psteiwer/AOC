@@ -3,7 +3,7 @@ Class AOC.Y2019.Utils.Intcode Extends %RegisteredObject
 
 Property Instructions As %List;
 
-Property Position As %Integer [ InitialExpression = 0 ];
+Property Position As %Integer [ InitialExpression = -1 ];
 
 Property RelativeBase As %Integer [ InitialExpression = 0 ];
 
@@ -123,11 +123,11 @@ Method Run(debug=0) As %Status
 			d ..AddOutput(res)
 		} elseif tInst=5 {
 			if val1'=0 {
-				set ..Position=val2
+				set ..Position=val2-1
 			}
 		} elseif tInst=6 {
 			if val1=0 {
-				set ..Position=val2
+				set ..Position=val2-1
 			}
 		} elseif tInst=7 {
 			if val1<val2 {
@@ -153,9 +153,9 @@ Method GetInstruction(pPosition=-1) As %String
 {
 	If pPosition=-1 {
 		Set ..Position=..Position+1
-		Set tInstruction=$LG(..Instructions,..Position)
+		Set tInstruction=$LG(..Instructions,..Position+1)
 	} Else {
-		Set tInstruction=$LG(..Instructions,pPosition)
+		Set tInstruction=$LG(..Instructions,pPosition+1)
 	}
 	
 	Quit tInstruction
@@ -169,7 +169,7 @@ Method SetInstruction(pValue,pPosition=-1) As %Status
 		Set ..Instructions=..Instructions_$LB(pValue)
 	} Else {
 		Set tList=..Instructions
-		Set $List(tList,pPosition)=pValue
+		Set $List(tList,pPosition+1)=pValue
 		Set ..Instructions=tList
 	}
 	
