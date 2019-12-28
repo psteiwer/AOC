@@ -343,27 +343,7 @@ ClassMethod D6P2(input) As %String
 
 ClassMethod D7P1(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(7,.input)
-	}
-	
-	set res=""
-	set pos=$o(input(""),1,l)
-	set maxlen=0
-	while pos'="" {
-		set maxlen=$l(l,",")
-		for i=0:1:$l(l,",")-1 {
-			set instructions(i)=$p(l,",",i+1)
-		}
-		set pos=$o(input(pos),1,l)
-	}
-	
-	zw:debug instructions
-	merge resetinstructions=instructions
-	
-	set pos=0
-	set maxout=-1
-	
+	set res=0
 	for a=0:1:4 {
 		for b=0:1:4 {
 			continue:b=a
@@ -373,129 +353,44 @@ ClassMethod D7P1(input="",debug=0) As %String
 					continue:((d=a)||(d=b)||(d=c))
 					for e=0:1:4 {
 						continue:((e=a)||(e=b)||(e=c)||(e=d))
-						set tempoutput=0
-						set inputval=$lb(a,b,c,d,e)
-						w:debug "using "
-						zw:debug inputval
-						for f=1:1:5 {
-							set inputpos=0
-							set pos=-1
-							k instructions
-							merge instructions=resetinstructions
-							k inputcount
-							while 1 {
-								set inst=instructions($i(pos))
-								quit:inst=99
-								set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
-								set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
-								set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
-								set inst=inst#100
-								// ??? inst=4
-								if ((mode1) || (inst=3) || (inst=4)) {
-									set val1=instructions($i(pos))
-								} else {
-									set val1=instructions(instructions($i(pos))#maxlen)
-								}
-								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
-									if mode2 {
-										set val2=instructions($i(pos))
-									} else {
-										set val2=instructions(instructions($i(pos))#maxlen)
-									}
-									if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-										if (mode3) {
-											set storeloc=instructions($i(pos))#maxlen
-										} else {
-											// ???
-											set storeloc=instructions($i(pos))#maxlen
-										}
-									}
-								}
-								if inst=1 {
-									set instructions(storeloc)=val1+val2
-								} elseif inst=2 {
-									set instructions(storeloc)=val1*val2
-								} elseif inst=3 {
-									if $i(inputcount)=1 {
-										set instructions(val1)=$lg(inputval,f)
-									} else {
-										set instructions(val1)=tempoutput
-									}
-									zw:debug inputpos
-								} elseif inst=4 {
-									if mode1 {
-										zw:debug inputval
-										zw:debug val1
-										set tempoutput=val1
-									} else {
-										zw:debug inputval
-										zw:debug instructions(val1)
-										set tempoutput=instructions(val1)
-									}
-								} elseif inst=5 {
-									if val1'=0 {
-										set pos=val2-1
-									}
-								} elseif inst=6 {
-									if val1=0 {
-										set pos=val2-1
-									}
-								} elseif inst=7 {
-									if val1<val2 {
-										set instructions(storeloc)=1
-									} else {
-										set instructions(storeloc)=0
-									}
-								} elseif inst=8 {
-									if val1=val2 {
-										set instructions(storeloc)=1
-									} else {
-										set instructions(storeloc)=0
-									}
-								}
-								zw:debug inst
-								zw:debug val1
-								zw:debug val2
-								zw:debug storeloc
-							}
-						}
-							
-						if tempoutput>maxout {
-							set maxout=tempoutput
-							zw:debug inputval
-							zw:debug maxout
-							//break
-						}
+						Set intcodeA=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeA.AddInput(a)
+						D intcodeA.AddInput(0)
+						Set intcodeB=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeB.AddInput(b)
+						Set intcodeC=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeC.AddInput(c)
+						Set intcodeD=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeD.AddInput(d)
+						Set intcodeE=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeE.AddInput(e)
+						
+						set tSC=intcodeA.Run(debug)
+						D intcodeB.AddInput(intcodeA.GetOutput())
+						
+						set tSC=intcodeB.Run(debug)
+						D intcodeC.AddInput(intcodeB.GetOutput())
+						
+						set tSC=intcodeC.Run(debug)
+						D intcodeD.AddInput(intcodeC.GetOutput())
+						
+						set tSC=intcodeD.Run(debug)
+						D intcodeE.AddInput(intcodeD.GetOutput())
+						
+						set tSC=intcodeE.Run(debug)
+						set temp=intcodeE.GetOutput()
+						set:temp>res res=temp
 					}
 				}
 			}
 		}
 	}
-	
-	quit maxout
+	quit res
 }
 
 ClassMethod D7P2(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(7,.input)
-	}
-	
-	set res=""
-	set pos=$o(input(""),1,l)
-	set maxlen=0
-	while pos'="" {
-		set maxlen=$l(l,",")
-		for i=0:1:$l(l,",")-1 {
-			set instructions(i)=$p(l,",",i+1)
-		}
-		set pos=$o(input(pos),1,l)
-	}
-	
-	zw:debug instructions
-	merge originalinstructions=instructions
-	set maxout=-1
-	
+	set res=0
 	for a=5:1:9 {
 		for b=5:1:9 {
 			continue:b=a
@@ -505,133 +400,51 @@ ClassMethod D7P2(input="",debug=0) As %String
 					continue:((d=a)||(d=b)||(d=c))
 					for e=5:1:9 {
 						continue:((e=a)||(e=b)||(e=c)||(e=d))
-						set tempoutput=0
-						set inputval=$lb(a,b,c,d,e)
-						w:debug "using "
-						zw:debug inputval
-						set haltfound=0
-						set inputpos=-1
-						set inputcount(1)=0
-						set inputcount(2)=0
-						set inputcount(3)=0
-						set inputcount(4)=0
-						set inputcount(5)=0
+						Set intcodeA=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeA.AddInput(a)
+						D intcodeA.AddInput(0)
+						Set intcodeB=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeB.AddInput(b)
+						Set intcodeC=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeC.AddInput(c)
+						Set intcodeD=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeD.AddInput(d)
+						Set intcodeE=##class(AOC.Y2019.Utils.Intcode).%New(7)
+						D intcodeE.AddInput(e)
 						
-						merge resetinstructions(1)=originalinstructions
-						merge resetinstructions(2)=originalinstructions
-						merge resetinstructions(3)=originalinstructions
-						merge resetinstructions(4)=originalinstructions
-						merge resetinstructions(5)=originalinstructions
-						
-						set pos(1)=-1
-						set pos(2)=-1
-						set pos(3)=-1
-						set pos(4)=-1
-						set pos(5)=-1
-						
-						while 'haltfound {
-							set inputpos=$i(inputpos)#5
-							k instructions
-							merge instructions=resetinstructions(inputpos+1)
-							//set inputpos=0
-							set pos=pos(inputpos+1)
-							//k instructions
-							//merge instructions=resetinstructions
-							while 1 {
-								set inst=instructions($i(pos))
-								set:inst=99 haltfound=1
-								quit:inst=99
-								set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
-								set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
-								set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
-								set inst=inst#100
-								// ??? inst=4
-								if ((mode1) || (inst=3) || (inst=4)) {
-									set val1=instructions($i(pos))
-								} else {
-									set val1=instructions(instructions($i(pos))#maxlen)
-								}
-								if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
-									if mode2 {
-										set val2=instructions($i(pos))
-									} else {
-										set val2=instructions(instructions($i(pos))#maxlen)
-									}
-									if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-										if (mode3) {
-											set storeloc=instructions($i(pos))#maxlen
-										} else {
-											// ???
-											set storeloc=instructions($i(pos))#maxlen
-										}
-									}
-								}
-								if inst=1 {
-									set instructions(storeloc)=val1+val2
-								} elseif inst=2 {
-									set instructions(storeloc)=val1*val2
-								} elseif inst=3 {
-									if $i(inputcount(inputpos+1))=1 {
-										set instructions(val1)=$lg(inputval,inputpos+1)
-									} else {
-										set instructions(val1)=tempoutput
-									}
-									zw:debug inputpos
-								} elseif inst=4 {
-									if mode1 {
-										zw:debug inputval
-										zw:debug val1
-										set tempoutput=val1
-									} else {
-										zw:debug inputval
-										zw:debug instructions(val1)
-										set tempoutput=instructions(val1)
-									}
-									
-									k resetinstructions(inputpos+1)
-									merge resetinstructions(inputpos+1)=instructions
-									set pos(inputpos+1)=pos
-									quit
-								} elseif inst=5 {
-									if val1'=0 {
-										set pos=val2-1
-									}
-								} elseif inst=6 {
-									if val1=0 {
-										set pos=val2-1
-									}
-								} elseif inst=7 {
-									if val1<val2 {
-										set instructions(storeloc)=1
-									} else {
-										set instructions(storeloc)=0
-									}
-								} elseif inst=8 {
-									if val1=val2 {
-										set instructions(storeloc)=1
-									} else {
-										set instructions(storeloc)=0
-									}
-								}
-								zw:debug inst
-								zw:debug val1
-								zw:debug val2
-								zw:debug storeloc
-							}
-						}
+						set lastEoutput=""
+						While 1 {
+							set tSC=intcodeA.Run(debug,1)
+							set temp=intcodeA.GetOutput()
+							D intcodeB.AddInput(temp)
 							
-						if tempoutput>maxout {
-							set maxout=tempoutput
-							zw:debug inputval
-							zw:debug maxout
+							set tSC=intcodeB.Run(debug,1)
+							set temp=intcodeB.GetOutput()
+							D intcodeC.AddInput(temp)
+							
+							set tSC=intcodeC.Run(debug,1)
+							set temp=intcodeC.GetOutput()
+							D intcodeD.AddInput(temp)
+							
+							set tSC=intcodeD.Run(debug,1)
+							set temp=intcodeD.GetOutput()
+							D intcodeE.AddInput(temp)
+							
+							set tSC=intcodeE.Run(debug,1)
+							if intcodeE.Finished {
+								set:lastEoutput>res res=lastEoutput
+								quit
+							} Else {
+								set lastEoutput=intcodeE.GetOutput()
+								D intcodeA.AddInput(lastEoutput)
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-	
-	quit maxout
+	quit res
 }
 
 ClassMethod D8P1(input) As %String
