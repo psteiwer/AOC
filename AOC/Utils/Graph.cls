@@ -5,6 +5,8 @@ Property Vertices [ MultiDimensional ];
 
 Property Edges [ MultiDimensional ];
 
+Property ShortestDistances [ MultiDimensional ];
+
 Method AddVertex(pName="",pValue="") As %Status
 {
 	Set tSC=$$$OK
@@ -55,27 +57,48 @@ Method RemoveEdge(pVertex1, pVertex2) As %Status
 	Quit tSC
 }
 
-
-Method ShortestDistance(pVertex1,pVertex2,pDistance=0,ByRef pTested) As %Integer
+Method ShortestDistance(pVertex1,pVertex2) As %Integer
 {
-	Set tRes=1E18
+	Quit:$Data(..ShortestDistances(pVertex1,pVertex2)) ..ShortestDistances(pVertex1,pVertex2)
 	
-	// Recurse through all of pVertex1 Edges
-	Set tVertex=$o(..Edges(pVertex1,""))
-	While tVertex'="" {
-		If tVertex=pVertex2 {
-			// Once pVertex2 is found, return total distance
-			Return pDistance+..Edges(pVertex1,tVertex)
-		} ElseIf '$Data(pTested(pVertex1,tVertex)) {
-			Merge tTested=pTested
-			Set tTested(pVertex1,tVertex)=1
-			Set tTested(tVertex,pVertex1)=1
-			
-			Set tTemp=..ShortestDistance(tVertex,pVertex2,pDistance+..Edges(pVertex1,tVertex),.tTested)
-			// If tTemp has a lower value than tRes, update tRes
-			Set:tTemp<tRes tRes=tTemp
+	Set tRes=1E18
+	Set tCurrentVertex=pVertex1
+	Set tLastDistance=0
+	Set tTempGraph(pVertex1)=0
+	
+	While 1 {
+		Set tVertex=$o(..Edges(tCurrentVertex,""))
+		While tVertex'="" {
+			If '$Data(tTempGraph(tVertex)) {
+				Set tTempGraph(tVertex)=..Edges(tCurrentVertex,tVertex)+tLastDistance
+			}
+			Set tVertex=$o(..Edges(tCurrentVertex,tVertex))
 		}
-		Set tVertex=$o(..Edges(pVertex1,tVertex))
+		
+		If $Data(tTempGraph(pVertex2)) {
+			Set tRes=tTempGraph(pVertex2)
+			Set ..ShortestDistances(pVertex1,pVertex2)=tRes
+			Set ..ShortestDistances(pVertex2,pVertex1)=tRes
+			Quit
+		}
+		
+		Set tShortestVertexName=""
+		Set tShortestVertexDistance=1E18
+		Set tVertex=$o(tTempGraph(""))
+		While tVertex'="" {
+			If (tTempGraph(tVertex)<tShortestVertexDistance)&&('$Data(tShortestGraph(tVertex))) {
+				Set tShortestVertexDistance=tTempGraph(tVertex)
+				Set tShortestVertexName=tVertex
+			}
+			Set tVertex=$o(tTempGraph(tVertex))
+		}
+		
+		Set tShortestGraph(tShortestVertexName)=tShortestVertexDistance
+		Set ..ShortestDistances(pVertex1,tShortestVertexName)=tShortestVertexDistance
+		Set ..ShortestDistances(tShortestVertexName,pVertex1)=tShortestVertexDistance
+		
+		Set tLastDistance=tShortestVertexDistance
+		Set tCurrentVertex=tShortestVertexName
 	}
 	
 	Quit tRes
