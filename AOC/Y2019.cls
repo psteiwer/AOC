@@ -34,94 +34,34 @@ ClassMethod D1P2() As %String
 	quit res
 }
 
-ClassMethod D2P1(input="") As %String
+ClassMethod D2P1(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(2,.input)
-	}
+	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(2)
+	Do intcode.SetInstruction(12,1)
+	Do intcode.SetInstruction(2,2)
+	set tSC=intcode.Run(debug)
 	
-	set res=""
-	set pos=$o(input(""),1,l)
-	set maxlen=0
-	while pos'="" {
-		set maxlen=$l(l,",")
-		for i=0:1:$l(l,",")-1 {
-			set instructions(i)=$p(l,",",i+1)
-		}
-		set pos=$o(input(pos),1,l)
-	}
-	set pos=-1
-	
-	set instructions(1)=12
-	set instructions(2)=2
-	
-	while 1 {
-		set inst=instructions($i(pos))
-		quit:inst=99
-		set val1=instructions(instructions($i(pos))#maxlen)
-		set val2=instructions(instructions($i(pos))#maxlen)
-		set storeloc=instructions($i(pos))#maxlen
-		if inst=1 {
-			set instructions(storeloc)=val1+val2
-		} elseif inst=2 {
-			set instructions(storeloc)=val1*val2
-		}
-	}
-	
-	quit instructions(0)
+	quit intcode.GetInstruction(0)
 }
 
-ClassMethod D2P2(input="") As %String
+ClassMethod D2P2(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(2,.input)
-	}
-	//zw out
-	
 	for x=0:1:99 {
 		for y=0:1:99 {
-			set res=""
-			set pos=$o(input(""),1,l)
-			set maxlen=0
-			while pos'="" {
-				set maxlen=$l(l,",")
-				for i=0:1:$l(l,",")-1 {
-					set instructions(i)=$p(l,",",i+1)
-				}
-				set pos=$o(input(pos),1,l)
-			}
+			Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(2)
+			Do intcode.SetInstruction(x,1)
+			Do intcode.SetInstruction(y,2)
+			set tSC=intcode.Run(debug)
 			
-			set instructions(1)=x
-			set instructions(2)=y
-			
-			set pos=-1
-			
-			while 1 {
-				set inst=instructions($i(pos))
-				quit:inst=99
-				set val1=instructions(instructions($i(pos))#maxlen)
-				set val2=instructions(instructions($i(pos))#maxlen)
-				set storeloc=instructions($i(pos))#maxlen
-				if inst=1 {
-					set instructions(storeloc)=val1+val2
-				} elseif inst=2 {
-					set instructions(storeloc)=val1*val2
-				}
-			}
-			
-			if instructions(0)=19690720 {
-				//zw instructions
-				//w "x="_x,!
-				//w "y="_y,!
+			if intcode.GetInstruction(0)=19690720 {
 				return (100*x+y)
 			}
 		}
-		if instructions(0)=19690720 {
+		if intcode.GetInstruction(0)=19690720 {
 			quit
 		}
 	}
-	
-	quit instructions(0)
+	quit intcode.GetInstruction(0)
 }
 
 ClassMethod D3P1(input) As %String
