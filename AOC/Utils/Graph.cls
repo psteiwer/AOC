@@ -104,6 +104,20 @@ Method ShortestDistance(pVertex1,pVertex2) As %Integer
 	Quit tRes
 }
 
+Method ComputeAllShortestDistances() As %Status
+{
+	Set tSC=$$$OK
+	
+	Set tVertices=..GetListOfVertices()
+	For tPos=1:1:$LL(tVertices)-1 {
+		For tPos2=tPos+1:1:$LL(tVertices) {
+			Do ..ShortestDistance($LG(tVertices,tPos),$LG(tVertices,tPos2))
+		}
+	}
+	
+	Quit tSC
+}
+
 Method GetListOfVertices() As %List
 {
 	Set tRes=""
