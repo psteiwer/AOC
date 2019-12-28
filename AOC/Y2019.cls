@@ -270,156 +270,29 @@ ClassMethod D4P2(input) As %String
 
 ClassMethod D5P1(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(5,.input)
+
+	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(5)
+	D intcode.AddInput(1)
+	set tSC=intcode.Run(debug)
+	set temp=intcode.GetOutput()
+	while temp'=-1 {
+		set res=temp
+		set temp=intcode.GetOutput()
 	}
-	
-	set res=""
-	set pos=$o(input(""),1,l)
-	set maxlen=0
-	while pos'="" {
-		set maxlen=$l(l,",")
-		for i=0:1:$l(l,",")-1 {
-			set instructions(i)=$p(l,",",i+1)
-		}
-		set pos=$o(input(pos),1,l)
-	}
-	
-	set pos=-1
-	set inputval=1
-	
-	while 1 {
-		set inst=instructions($i(pos))
-		quit:inst=99
-		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
-		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
-		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
-		set inst=inst#100
-		// ??? inst=4
-		if ((mode1) || (inst=3) || (inst=4)) {
-			set val1=instructions($i(pos))
-		} else {
-			set val1=instructions(instructions($i(pos))#maxlen)
-		}
-		if ((inst=1) || (inst=2)) {
-			if mode2 {
-				set val2=instructions($i(pos))
-			} else {
-				set val2=instructions(instructions($i(pos))#maxlen)
-			}
-			if (mode3) {
-				set storeloc=instructions($i(pos))#maxlen
-			} else {
-				// ???
-				set storeloc=instructions($i(pos))#maxlen
-			}
-		}
-		if inst=1 {
-			set instructions(storeloc)=val1+val2
-		} elseif inst=2 {
-			set instructions(storeloc)=val1*val2
-		} elseif inst=3 {
-			set instructions(val1)=inputval
-		} elseif inst=4 {
-			if mode1 {
-				set res=val1
-			} else {
-				set res=instructions(val1)
-			}
-			w:debug res,!
-		}
-	}
-	
 	quit res
 }
 
 ClassMethod D5P2(input="",debug=0) As %String
 {
-	if input="" {
-		do ##class(AOC.Y2019).GetInput(5,.input)
+
+	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(5)
+	D intcode.AddInput(5)
+	set tSC=intcode.Run(debug)
+	set temp=intcode.GetOutput()
+	while temp'=-1 {
+		set res=temp
+		set temp=intcode.GetOutput()
 	}
-	
-	set res=""
-	set pos=$o(input(""),1,l)
-	set maxlen=0
-	while pos'="" {
-		set maxlen=$l(l,",")
-		for i=0:1:$l(l,",")-1 {
-			set instructions(i)=$p(l,",",i+1)
-		}
-		set pos=$o(input(pos),1,l)
-	}
-	
-	//set instructions(1)=12
-	//set instructions(2)=2
-	
-	set pos=-1
-	set inputval=5
-	
-	while 1 {
-		set inst=instructions($i(pos))
-		quit:inst=99
-		set mode1=+$e($replace($j(inst#100000,5)," ",0),3)
-		set mode2=+$e($replace($j(inst#100000,5)," ",0),2)
-		set mode3=+$e($replace($j(inst#100000,5)," ",0),1)
-		set inst=inst#100
-		// ??? inst=4
-		if ((mode1) || (inst=3) || (inst=4)) {
-			set val1=instructions($i(pos))
-		} else {
-			set val1=instructions(instructions($i(pos))#maxlen)
-		}
-		if ((inst=1) || (inst=2) || (inst=5) || (inst=6) || (inst=7) || (inst=8)) {
-			if mode2 {
-				set val2=instructions($i(pos))
-			} else {
-				set val2=instructions(instructions($i(pos))#maxlen)
-			}
-			if ((inst=1) || (inst=2) || (inst=7) || (inst=8)) {
-				if (mode3) {
-					set storeloc=instructions($i(pos))#maxlen
-				} else {
-					// ???
-					set storeloc=instructions($i(pos))#maxlen
-				}
-			}
-		}
-		if inst=1 {
-			set instructions(storeloc)=val1+val2
-		} elseif inst=2 {
-			set instructions(storeloc)=val1*val2
-		} elseif inst=3 {
-			set instructions(val1)=inputval
-		} elseif inst=4 {
-			if mode1 {
-				set res=val1
-			} else {
-				set res=instructions(val1)
-			}
-			w:debug res,!
-		} elseif inst=5 {
-			if val1'=0 {
-				set pos=val2-1
-			}
-		} elseif inst=6 {
-			if val1=0 {
-				set pos=val2-1
-			}
-		} elseif inst=7 {
-			if val1<val2 {
-				set instructions(storeloc)=1
-			} else {
-				set instructions(storeloc)=0
-			}
-		} elseif inst=8 {
-			if val1=val2 {
-				set instructions(storeloc)=1
-			} else {
-				set instructions(storeloc)=0
-			}
-		}
-	}
-	
 	quit res
 }
 
