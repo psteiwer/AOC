@@ -487,76 +487,45 @@ ClassMethod D6P1(input) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(6,.input)
 	
+	set graph=##class(AOC.Utils.Graph).%New()
 	set res=""
 	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,")",.a,.b)
 		
-		set orbits(b)=a
-		set planets(a)=$i(planets(a))
-		set planets(b)=$i(planets(b))
+		d graph.AddVertex(a)
+		d graph.AddVertex(b)
+		d graph.AddEdge(a,b,1)
 		
 		set pos=$o(input(pos),1,l)
 	}
 	
-	set planet=$o(planets(""))
-	while planet'="" {
-		set parent=$g(orbits(planet))
-		while parent'="" {
-			set res=$i(res)
-			set parent=$g(orbits(parent))
-		}
-		set planet=$o(planets(planet))
+	set vertices=graph.GetListOfVertices()
+	for i=1:1:$ll(vertices) {
+		set res=res+graph.ShortestDistance("COM",$lg(vertices,i))
 	}
 	
 	quit res
 }
 
-
 ClassMethod D6P2(input) As %String
 {
 	do:'$d(input) ##class(AOC.Y2019).GetInput(6,.input)
 	
+	set graph=##class(AOC.Utils.Graph).%New()
 	set res=""
 	set pos=$o(input(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2019).ParseString(l,")",.a,.b)
 		
-		set orbits(b)=a
-		set planets(a)=$i(planets(a))
-		set planets(b)=$i(planets(b))
+		d graph.AddVertex(a)
+		d graph.AddVertex(b)
+		d graph.AddEdge(a,b,1)
 		
 		set pos=$o(input(pos),1,l)
 	}
 	
-	set planet=$o(planets(""))
-	while planet'="" {
-		set planetcount=0
-		set parent=$g(orbits(planet))
-		set planetpath=planet
-		while parent'="" {
-			set res=$i(res)
-			set planetcount=$i(planetcount)
-			set planetpath=parent_","_planetpath
-			set parent=$g(orbits(parent))
-		}
-		set planetpath(planet)=planetpath
-		set planetcount(planet)=planetcount
-		set planet=$o(planets(planet))
-	}
-	
-	set youpath=$lfs(planetpath("YOU"))
-	set sanpath=$lfs(planetpath("SAN"))
-	
-	for i=1:1:$length(youpath) {
-		if (($lg(youpath,i))=$lg(sanpath,i)) && ($lg(youpath,i)'="") {
-			set commonparent=$lg(youpath,i)
-		} else {
-			quit
-		}
-	}
-	
-	quit (planetcount("YOU")-planetcount(commonparent))+(planetcount("SAN")-planetcount(commonparent))-2
+	quit graph.ShortestDistance("YOU","SAN")-2
 }
 
 ClassMethod D7P1(input="",debug=0) As %String
