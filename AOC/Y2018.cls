@@ -1,7 +1,7 @@
 Class AOC.Y2018 Extends AOC.Base
 {
 
-PARAMETER Year As %Integer = 2018;
+Parameter Year As %Integer = 2018;
 
 ClassMethod D1P1() As %String
 {
@@ -302,7 +302,7 @@ ClassMethod D4P2() As %String
 	quit maxpos*maxguard
 }
 
-ClassMethod D5P1(pIn="") As %String
+ClassMethod D5P1(pIn = "") As %String
 {
 	if pIn="" {
 		do ##class(AOC.Y2018).GetInput(5,.out)
