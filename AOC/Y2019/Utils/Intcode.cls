@@ -204,7 +204,7 @@ Method AddInput(pValue) As %Status
 
 Method GetOutput() As %String
 {
-	Set tRes=$LG(..Output,1,-1)
+	Set tRes=$LG(..Output,1,"")
 	Set ..Output=$List(..Output,2,*)
 	
 	Quit tRes
