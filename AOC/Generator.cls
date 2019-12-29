@@ -75,7 +75,7 @@ ClassMethod AddPart(pYear,pDay,pPart,ByRef pClass As %Dictionary.ClassDefinition
 	Set tMethod.FormalSpec="pInput="""", pDebug=0, pWithUI=0"
 	Set tMethod.ReturnType="%String"
 	
-	Do tMethod.Implementation.WriteLine($C(9)_"Do ##class("_pClass.Name_").GetInput(..#Day,.input)")
+	Do tMethod.Implementation.WriteLine($C(9)_"Do ##class("_pClass.Name_").GetInput(..#Day,.pInput)")
 	Do tMethod.Implementation.WriteLine($C(9))
 	Do tMethod.Implementation.WriteLine($C(9)_"set res=""""")
 	Do tMethod.Implementation.WriteLine($C(9)_"set pos=$o(input(""""),1,l)")
