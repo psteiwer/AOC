@@ -275,7 +275,7 @@ ClassMethod D5P1(input="",debug=0) As %String
 	D intcode.AddInput(1)
 	set tSC=intcode.Run(debug)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set res=temp
 		set temp=intcode.GetOutput()
 	}
@@ -289,7 +289,7 @@ ClassMethod D5P2(input="",debug=0) As %String
 	D intcode.AddInput(5)
 	set tSC=intcode.Run(debug)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set res=temp
 		set temp=intcode.GetOutput()
 	}
@@ -532,7 +532,7 @@ ClassMethod D9P1(input="",debug=0) As %String
 	D intcode.AddInput(1)
 	set tSC=intcode.Run(debug)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set res=temp
 		set temp=intcode.GetOutput()
 	}
@@ -545,7 +545,7 @@ ClassMethod D9P2(input="",debug=0) As %String
 	D intcode.AddInput(2)
 	set tSC=intcode.Run(debug)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set res=temp
 		set temp=intcode.GetOutput()
 	}
@@ -803,7 +803,7 @@ ClassMethod D11P1(input="",debug=0) As %String
 	d intcode.AddInput(0)
 	set tSC=intcode.Run(debug,1)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set:'$d(map(posy,posx)) painted=$i(painted)
 		set map(posy,posx)=temp
 		set tSC=intcode.Run(debug,1)
@@ -843,7 +843,7 @@ ClassMethod D11P2(input="",debug=0) As %String
 	d intcode.AddInput(1)
 	set tSC=intcode.Run(debug,1)
 	set temp=intcode.GetOutput()
-	while temp'=-1 {
+	while temp'="" {
 		set:'$d(map(posy,posx)) painted=$i(painted)
 		set map(posy,posx)=temp
 		set tSC=intcode.Run(debug,1)
