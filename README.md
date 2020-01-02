@@ -3,6 +3,8 @@ Advent Of Code
 
 Solutions for http://adventofcode.com/
 
+[ObjectScript-Math](https://github.com/psteiwer/ObjectScript-Math) is required for some solutions
+
 # Object Script
 2015: 0/50
 
