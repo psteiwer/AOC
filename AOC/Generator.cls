@@ -1,7 +1,7 @@
 Class AOC.Generator
 {
 
-ClassMethod Create(pYear="",pDay="") As %Status
+ClassMethod Create(pYear = "", pDay = "") As %Status
 {
 	Set tSC=$$$OK
 	
@@ -38,7 +38,7 @@ ClassMethod Create(pYear="",pDay="") As %Status
 	Quit tSC
 }
 
-ClassMethod CreateClass(pYear,pDay,ByRef pClass As %Dictionary.ClassDefinition) As %Status
+ClassMethod CreateClass(pYear, pDay, ByRef pClass As %Dictionary.ClassDefinition) As %Status
 {
 	Set tSC=$$$OK
 	
@@ -50,7 +50,7 @@ ClassMethod CreateClass(pYear,pDay,ByRef pClass As %Dictionary.ClassDefinition) 
 	Quit tSC
 }
 
-ClassMethod AddParameter(pParameterName,pParameterValue,ByRef pClass As %Dictionary.ClassDefinition) As %Status
+ClassMethod AddParameter(pParameterName, pParameterValue, ByRef pClass As %Dictionary.ClassDefinition) As %Status
 {
 	Set tSC=$$$OK
 	
@@ -62,7 +62,7 @@ ClassMethod AddParameter(pParameterName,pParameterValue,ByRef pClass As %Diction
 	Quit tSC
 }
 
-ClassMethod AddPart(pYear,pDay,pPart,ByRef pClass As %Dictionary.ClassDefinition) As %Status
+ClassMethod AddPart(pYear, pDay, pPart, ByRef pClass As %Dictionary.ClassDefinition) As %Status
 {
 	Set tSC=$$$OK
 	
@@ -78,13 +78,13 @@ ClassMethod AddPart(pYear,pDay,pPart,ByRef pClass As %Dictionary.ClassDefinition
 	Do tMethod.Implementation.WriteLine($C(9)_"Do ##class("_pClass.Name_").GetInput(..#Day,.pInput)")
 	Do tMethod.Implementation.WriteLine($C(9))
 	Do tMethod.Implementation.WriteLine($C(9)_"set res=""""")
-	Do tMethod.Implementation.WriteLine($C(9)_"set pos=$o(input(""""),1,l)")
+	Do tMethod.Implementation.WriteLine($C(9)_"set pos=$o(pInput(""""),1,l)")
 	Do tMethod.Implementation.WriteLine($C(9)_"while pos'="""" {")
-	Do tMethod.Implementation.WriteLine($C(9)_$C(9)_"do ##class(AOC.Y2019).ParseString(l,,.l)")
+	Do tMethod.Implementation.WriteLine($C(9)_$C(9)_"do ##class("_pClass.Name_").ParseString(l,,.l)")
 	Do tMethod.Implementation.WriteLine($C(9)_$C(9))
 	Do tMethod.Implementation.WriteLine($C(9)_$C(9))
 	Do tMethod.Implementation.WriteLine($C(9)_$C(9))
-	Do tMethod.Implementation.WriteLine($C(9)_$C(9)_"set pos=$o(input(pos),1,l)")
+	Do tMethod.Implementation.WriteLine($C(9)_$C(9)_"set pos=$o(pInput(pos),1,l)")
 	Do tMethod.Implementation.WriteLine($C(9)_"}")
 	Do tMethod.Implementation.WriteLine($C(9))
 	Do tMethod.Implementation.WriteLine($C(9)_"Quit res")
@@ -94,7 +94,7 @@ ClassMethod AddPart(pYear,pDay,pPart,ByRef pClass As %Dictionary.ClassDefinition
 	Quit tSC
 }
 
-ClassMethod AddRun(pYear,pDay,ByRef pClass As %Dictionary.ClassDefinition) As %Status
+ClassMethod AddRun(pYear, pDay, ByRef pClass As %Dictionary.ClassDefinition) As %Status
 {
 	Set tSC=$$$OK
 	
