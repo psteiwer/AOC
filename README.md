@@ -6,7 +6,7 @@ Solutions for http://adventofcode.com/
 [ObjectScript-Math](https://github.com/psteiwer/ObjectScript-Math) is required for some solutions
 
 # Object Script
-2015: 6/50
+2015: 10/50
 
 2016: 0/50
 
