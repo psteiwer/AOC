@@ -20,13 +20,10 @@ ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 		while temppos'=-1 {
 			if $e(l,temppos+1)="""" {
 				set l=$e(l,1,temppos-1)_""""_$e(l,temppos+2,*)
-				//set temppos=temppos-1
 			} elseif $e(l,temppos+1)="\" {
 				set l=$e(l,1,temppos-1)_"\"_$e(l,temppos+2,*)
-				//set temppos=temppos-1
 			} elseif $e(l,temppos+1)="x" {
 				set l=$e(l,1,temppos-1)_$char($zhex($e(l,temppos+2,temppos+3)))_$e(l,temppos+4,*)
-				//set temppos=temppos-4
 			}
 			set temppos=$find(l,"\",temppos+1)-1
 		}
