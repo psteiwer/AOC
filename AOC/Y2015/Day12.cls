@@ -10,6 +10,7 @@ ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 	Do:pInput="" ##class(AOC.Y2015.Day12).GetInput(..#Day,.pInput)
 	
 	set res=""
+	set iterators=##class(AOC.Utils.Stack).%New()
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
 		do ##class(AOC.Y2015.Day12).ParseString(l,,.l)
@@ -19,16 +20,14 @@ ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 		set hasnext=iterator.%GetNext(.key,.val)
 		while hasnext {
 			if $IsObject(val) {
-				set iterators($i(iterators))=iterator
+				do iterators.Push(iterator)
 				set iterator=val.%GetIterator()
 			} else {
 				set res=res+val
 			}
 			set hasnext=iterator.%GetNext(.key,.val)
-			while (('hasnext)&&($g(iterators,0)>0)) {
-				set iterator=iterators(iterators)
-				k iterators(iterators)
-				set iterators=iterators-1
+			while (('hasnext)&&(iterators.GetItems()>0)) {
+				set iterator=iterators.Pop()
 				set hasnext=iterator.%GetNext(.key,.val)
 			}
 		}
