@@ -7,7 +7,7 @@ Property Edges [ MultiDimensional ];
 
 Property ShortestDistances [ MultiDimensional ];
 
-Method AddVertex(pName="",pValue="") As %Status
+Method AddVertex(pName = "", pValue = "") As %Status
 {
 	Set tSC=$$$OK
 	
@@ -22,7 +22,7 @@ Method AddVertex(pName="",pValue="") As %Status
 	Quit tSC
 }
 
-Method RemoveVertex(pName="") As %Status
+Method RemoveVertex(pName = "") As %Status
 {
 	Set tSC=$$$OK
 	
@@ -37,7 +37,7 @@ Method RemoveVertex(pName="") As %Status
 	Quit tSC
 }
 
-Method AddEdge(pVertex1="", pVertex2="", pDistance=0) As %Status
+Method AddEdge(pVertex1 = "", pVertex2 = "", pDistance = 0) As %Status
 {
 	Set tSC=$$$OK
 	
@@ -57,7 +57,7 @@ Method RemoveEdge(pVertex1, pVertex2) As %Status
 	Quit tSC
 }
 
-Method ShortestDistance(pVertex1,pVertex2) As %Integer
+Method ShortestDistance(pVertex1, pVertex2) As %Integer
 {
 	Quit:$Data(..ShortestDistances(pVertex1,pVertex2)) ..ShortestDistances(pVertex1,pVertex2)
 	
@@ -116,6 +116,110 @@ Method ComputeAllShortestDistances() As %Status
 	}
 	
 	Quit tSC
+}
+
+Method ShortestTraverse() As %Integer
+{
+	Set tRes=1E18
+	
+	Set tRoute=""
+	Set tVertices=..GetListOfVertices()
+	For tVertex=1:1:$Listlength(tVertices) {
+		For tTempVertex=1:1:$Listlength(tVertices) {
+			Set tUnvisited($LG(tVertices,tTempVertex))=1
+		}
+		Set tDistance=0
+		Set tVertexName=$LG(tVertices,tVertex)
+		Set tRoute=$LB(tVertexName)
+		Set tNextVertex=$O(..Edges(tVertexName,""))
+		While tNextVertex'="" {
+			While tNextVertex'="" {
+				While ((tNextVertex'="")&&($listfind(tRoute,tNextVertex)>0)) {
+					Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+				}
+				If tNextVertex="" {
+					Quit
+				}
+				If tDistance>tRes {
+					Set tNextVertex=""
+					Quit
+				}
+				
+				Set tDistance=tDistance+..ShortestDistance(tVertexName,tNextVertex)
+				Set tVertexName=tNextVertex
+				Set tNextVertex=""
+				Set tRoute=tRoute_$LB(tVertexName)
+				
+				If $LL(tRoute)=$LL(tVertices) {
+					If tRes>tDistance {
+						Set tRes=tDistance
+					}
+				}
+				
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+			// Roll back last move and try next
+			While ((tNextVertex="")&&($Listlength(tRoute)>1)) {
+				Set tNextVertex=$List(tRoute,*)
+				Set tRoute=$List(tRoute,1,*-1)
+				Set tVertexName=$List(tRoute,*)
+				Set tDistance=tDistance-..ShortestDistance(tVertexName,tNextVertex)
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+		}
+	}
+
+	Quit tRes
+}
+
+Method LongestTraverse() As %Integer
+{
+	Set tRes=0
+	
+	Set tRoute=""
+	Set tVertices=..GetListOfVertices()
+	For tVertex=1:1:$Listlength(tVertices) {
+		For tTempVertex=1:1:$Listlength(tVertices) {
+			Set tUnvisited($LG(tVertices,tTempVertex))=1
+		}
+		Set tDistance=0
+		Set tVertexName=$LG(tVertices,tVertex)
+		Set tRoute=$LB(tVertexName)
+		Set tNextVertex=$O(..Edges(tVertexName,""))
+		While tNextVertex'="" {
+			While tNextVertex'="" {
+				While ((tNextVertex'="")&&($listfind(tRoute,tNextVertex)>0)) {
+					Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+				}
+				If tNextVertex="" {
+					Quit
+				}
+				
+				Set tDistance=tDistance+..ShortestDistance(tVertexName,tNextVertex)
+				Set tVertexName=tNextVertex
+				Set tNextVertex=""
+				Set tRoute=tRoute_$LB(tVertexName)
+				
+				If $LL(tRoute)=$LL(tVertices) {
+					If tRes<tDistance {
+						Set tRes=tDistance
+					}
+				}
+				
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+			// Roll back last move and try next
+			While ((tNextVertex="")&&($Listlength(tRoute)>1)) {
+				Set tNextVertex=$List(tRoute,*)
+				Set tRoute=$List(tRoute,1,*-1)
+				Set tVertexName=$List(tRoute,*)
+				Set tDistance=tDistance-..ShortestDistance(tVertexName,tNextVertex)
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+		}
+	}
+
+	Quit tRes
 }
 
 Method GetListOfVertices() As %List
