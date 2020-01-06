@@ -1,7 +1,7 @@
 Class AOC.Base
 {
 
-PARAMETER Year As %Integer;
+Parameter Year As %Integer;
 
 ClassMethod GetInput(day, Output out) As %Status
 {
@@ -32,7 +32,7 @@ ClassMethod ParseString(pString As %String = "", pDelimiter As %String = "", ByR
 	}
 }
 
-ClassMethod Print2DArray(ByRef pArray,pPrintChar="",highlightx=0,highlighty=0)
+ClassMethod Print2DArray(ByRef pArray, pPrintChar = "", highlightx = 0, highlighty = 0)
 {
 	set minX=99999
 	set minY=99999
@@ -112,20 +112,21 @@ ClassMethod CheckAllDays() As %Status
 {
 	Do $classmethod($classname(),"GetInput","RESULTS",.tResults)
 	For tDay=1:1:25 {
+		Set tClass="AOC.Y"_..#Year_".Day"_tDay
 		Try {
 			For tPart=1:1:2 {
-				Set tMethod="D"_tDay_"P"_tPart
+				Set tMethod="Part"_tPart
 				Set tExpected=$G(tResults(((tDay-1)*2)+tPart),"")
 				If tExpected["//skip" {
-					Write tMethod_" skipped",!
+					Write tClass_"."_tMethod_" skipped",!
 				} ElseIf tExpected="" {
-					Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,"Day "_tDay_", Part "_tPart_" results not defined.")),!
+					Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tClass_"."_tMethod_" results not defined.")),!
 				} Else {
-					Set tRes=$classmethod($classname(),tMethod)
+					Set tRes=$classmethod(tClass,tMethod)
 					If tRes'=tExpected {
-						Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tMethod_" not correct. Was: "_tRes_". Expected: "_tExpected)),!
+						Write $SYSTEM.Status.GetErrorText($$$ERROR(5001,tClass_"."_tMethod_" not correct. Was: "_tRes_". Expected: "_tExpected)),!
 					} Else {
-						Write tMethod_" OK",!
+						Write tClass_"."_tMethod_" OK",!
 					}
 				}
 			}
