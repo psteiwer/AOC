@@ -26,8 +26,8 @@ ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 		}
 		set l=newl
 		set newl=""
-		zw l
-		break
+		zw:pDebug l
+		break:pDebug
 	}
 
 	Quit $length(l)
