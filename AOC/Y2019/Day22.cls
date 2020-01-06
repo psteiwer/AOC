@@ -5,7 +5,7 @@ Parameter Day = 22;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day22).GetInput(..#Day,.pInput)
 	
@@ -17,7 +17,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day22).ParseString(l,,.l)
 		zw:pDebug l
 		if l["deal into new stack" {
 			set tempdeck=""
@@ -57,7 +57,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day22).GetInput(..#Day,.pInput)
 	
@@ -70,7 +70,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day22).ParseString(l,,.l)
 		if l["deal into new stack" {
 			set cardatpos=numcards-cardatpos-1
 		} elseif l["cut " {
@@ -92,7 +92,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit cardatpos
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day22).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day22).Part2(pInput,pDebug,pWithUI)

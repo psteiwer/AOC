@@ -5,7 +5,7 @@ Parameter Day = 6;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do:((pInput="")&&($D(pInput)'=10)) ##class(AOC.Y2019.Day6).GetInput(..#Day,.pInput)
 	
@@ -13,7 +13,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,")",.a,.b)
+		do ##class(AOC.Y2019.Day6).ParseString(l,")",.a,.b)
 		
 		d graph.AddVertex(a)
 		d graph.AddVertex(b)
@@ -30,7 +30,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do:((pInput="")&&($D(pInput)'=10)) ##class(AOC.Y2019.Day6).GetInput(..#Day,.pInput)
 	
@@ -38,7 +38,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,")",.a,.b)
+		do ##class(AOC.Y2019.Day6).ParseString(l,")",.a,.b)
 		
 		d graph.AddVertex(a)
 		d graph.AddVertex(b)
@@ -50,7 +50,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit graph.ShortestDistance("YOU","SAN")-2
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day6).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day6).Part2(pInput,pDebug,pWithUI)

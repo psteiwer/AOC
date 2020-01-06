@@ -5,13 +5,17 @@ Parameter Day = 25;
 
 Parameter Year = 2019;
 
+// ANSWER:
 
-//ANSWER:
-//- boulder
-//- fixed point
-//- polygon
-//- manifold
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+// - boulder
+
+// - fixed point
+
+// - polygon
+
+// - manifold
+
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day25).GetInput(..#Day,.pInput)
 	
@@ -123,7 +127,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 			} else {
 				if $G(posoptions,0)&&(currentstring="") {
 					set posoptions=0
-					//do ##class(AOC.Y2019).Print2DArray(.map,,posx,posy)
+					//do ##class(AOC.Y2019.Day25).Print2DArray(.map,,posx,posy)
 				}
 			
 			
@@ -164,7 +168,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day25).Part1(pInput,pDebug,pWithUI)
 	

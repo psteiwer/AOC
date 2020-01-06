@@ -5,7 +5,7 @@ Parameter Day = 24;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day24).GetInput(..#Day,.pInput)
 	
@@ -13,7 +13,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set map=-1
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day24).ParseString(l,,.l)
 		
 		set map=$i(map)
 		for i=1:1:$length(l) {
@@ -25,7 +25,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	zw:pDebug map
 	
-	do:pDebug ##class(AOC.Y2019).Print2DArray(.map)
+	do:pDebug ##class(AOC.Y2019.Day24).Print2DArray(.map)
 	
 	// calculate biodiversity and update map
 	set done=0
@@ -81,7 +81,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day24).GetInput(..#Day,.pInput)
 	
@@ -90,7 +90,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set level=0
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day24).ParseString(l,,.l)
 		
 		set map=$i(map)
 		for i=1:1:$length(l) {
@@ -102,7 +102,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	zw:pDebug map
 	
-	do:pDebug ##class(AOC.Y2019).Print2DArray(.map)
+	do:pDebug ##class(AOC.Y2019.Day24).Print2DArray(.map)
 	
 	set minlevel=-1
 	set maxlevel=1
@@ -221,7 +221,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit numbugs
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day24).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day24).Part2(pInput,pDebug,pWithUI)

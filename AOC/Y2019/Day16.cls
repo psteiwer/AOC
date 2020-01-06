@@ -5,14 +5,14 @@ Parameter Day = 16;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day16).GetInput(..#Day,.pInput)
 	
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day16).ParseString(l,,.l)
 		
 		set count=0
 		for i=1:1:$length(l) {
@@ -60,14 +60,14 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day16).GetInput(..#Day,.pInput)
 	
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day16).ParseString(l,,.l)
 		
 		for i=1:1:$length(l) {
 			set tempvals(i)=$e(l,i)
@@ -116,7 +116,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day16).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day16).Part2(pInput,pDebug,pWithUI)

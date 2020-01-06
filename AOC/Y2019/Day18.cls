@@ -5,7 +5,7 @@ Parameter Day = 18;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day18).GetInput(..#Day,.pInput)
 	
@@ -15,7 +15,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set pos=$o(pInput(""),1,l)
 	set map=-1
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day18).ParseString(l,,.l)
 		set map=$i(map)
 		for i=1:1:$length(l) {
 			set tempchar=$e(l,i)
@@ -68,7 +68,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Fill(pDebug, ByRef pMap, ByRef pKeys, pSteps, pMinSteps, pPath, ByRef pKeystrings, pQ1="", pQ2="", pQ3="", pQ4="") As %Integer
+ClassMethod Fill(pDebug, ByRef pMap, ByRef pKeys, pSteps, pMinSteps, pPath, ByRef pKeystrings, pQ1 = "", pQ2 = "", pQ3 = "", pQ4 = "") As %Integer
 {
 	Quit:pSteps>=pMinSteps pMinSteps
 	merge tMap=pMap
@@ -192,7 +192,7 @@ ClassMethod Fill(pDebug, ByRef pMap, ByRef pKeys, pSteps, pMinSteps, pPath, ByRe
 							
 							
 								
-							//do ##class(AOC.Y2019).Print2DArray(.tMap)
+							//do ##class(AOC.Y2019.Day18).Print2DArray(.tMap)
 							//break
 								
 							set tKeys(tempkey)=1
@@ -211,7 +211,7 @@ ClassMethod Fill(pDebug, ByRef pMap, ByRef pKeys, pSteps, pMinSteps, pPath, ByRe
 	quit pMinSteps
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day18).GetInput(..#Day,.pInput)
 	
@@ -221,7 +221,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set pos=$o(pInput(""),1,l)
 	set map=-1
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day18).ParseString(l,,.l)
 		set map=$i(map)
 		for i=1:1:$length(l) {
 			set tempchar=$e(l,i)
@@ -292,7 +292,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day18).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day18).Part2(pInput,pDebug,pWithUI)

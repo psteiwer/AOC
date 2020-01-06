@@ -5,7 +5,7 @@ Parameter Day = 11;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(11)
 	
@@ -44,7 +44,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit painted
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(11)
 	
@@ -81,11 +81,11 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		set temp=intcode.GetOutput()
 	}
 	
-	do ##class(AOC.Y2019).Print2DArray(.map,1)
+	do ##class(AOC.Y2019.Day11).Print2DArray(.map,1)
 	quit ""
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day11).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day11).Part2(pInput,pDebug,pWithUI)

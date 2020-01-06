@@ -5,7 +5,7 @@ Parameter Day = 13;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(13)
 	set tSC=intcode.Run(pDebug)
@@ -21,7 +21,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set intcode=##class(AOC.Y2019.Utils.Intcode).%New(13)
 	do intcode.SetInstruction(2,0)
@@ -44,7 +44,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 			set ballx=tempx
 		}
 		set map(tempy,tempx)=tempid
-		do:pWithUI ##class(AOC.Y2019).Print2DArray(.map)
+		do:pWithUI ##class(AOC.Y2019.Day13).Print2DArray(.map)
 		
 		do intcode.GetInput()
 		if paddlex>ballx {
@@ -62,10 +62,11 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 }
 
 // Keeping this version for now since it has better UI display
-ClassMethod Part2Old(input="",withui=0,debug=0) As %String
+
+ClassMethod Part2Old(input = "", withui = 0, debug = 0) As %String
 {
 	if input="" {
-		do ##class(AOC.Y2019).GetInput(13,.input)
+		do ##class(AOC.Y2019.Day13).GetInput(13,.input)
 	}
 	
 	set res=""
@@ -229,7 +230,7 @@ ClassMethod Part2Old(input="",withui=0,debug=0) As %String
 	quit $p(res,",",*)
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day13).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day13).Part2(pInput,pDebug,pWithUI)

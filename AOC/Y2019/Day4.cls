@@ -5,11 +5,11 @@ Parameter Day = 4;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	set:pInput="" pInput="372037-905157"
 	
-	do ##class(AOC.Y2019).ParseString(pInput,"-",.minnum,.maxnum)
+	do ##class(AOC.Y2019.Day4).ParseString(pInput,"-",.minnum,.maxnum)
 	
 	set res=0
 	for i=minnum:1:maxnum {
@@ -33,11 +33,11 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	set:pInput="" pInput="372037-905157"
 	
-	do ##class(AOC.Y2019).ParseString(pInput,"-",.minnum,.maxnum)
+	do ##class(AOC.Y2019.Day4).ParseString(pInput,"-",.minnum,.maxnum)
 	
 	set res=0
 	for i=minnum:1:maxnum {
@@ -70,7 +70,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day4).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day4).Part2(pInput,pDebug,pWithUI)

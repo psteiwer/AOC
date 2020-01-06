@@ -5,7 +5,7 @@ Parameter Day = 20;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day20).GetInput(..#Day,.pInput)
 	
@@ -13,7 +13,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set pos=$o(pInput(""),1,l)
 	set map=-1
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day20).ParseString(l,,.l)
 		set map=$i(map)
 		for i=1:1:$length(l) {
 			set map(map,i-1)=$e(l,i)
@@ -22,7 +22,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		set pos=$o(pInput(pos),1,l)
 	}
 	
-	//do ##class(AOC.Y2019).Print2DArray(.map)
+	//do ##class(AOC.Y2019.Day20).Print2DArray(.map)
 	
 	//optimization, loop through map and any . surrounded by 3 # is a dead end, change to #
 	set modified=1
@@ -48,7 +48,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		}
 	}
 	
-	do:pDebug ##class(AOC.Y2019).Print2DArray(.map)
+	do:pDebug ##class(AOC.Y2019.Day20).Print2DArray(.map)
 	
 	// find all paths
 	set tempy=$o(map(0))
@@ -189,7 +189,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		set tempy=$o(map(tempy))
 	}
 	
-	//do ##class(AOC.Y2019).Print2DArray(.map)
+	//do ##class(AOC.Y2019.Day20).Print2DArray(.map)
 	
 	set currentpath="AA"
 	set nextpath=$o(links(currentpath,""))
@@ -200,7 +200,8 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	quit res
 }
-ClassMethod Move(pDebug, ByRef pMap, ByRef pPaths, ByRef pLinks, pCurrentPath, pPath, pSteps, pMinSteps, pDay=1, pLevel=0, ByRef pLevels) As %Integer
+
+ClassMethod Move(pDebug, ByRef pMap, ByRef pPaths, ByRef pLinks, pCurrentPath, pPath, pSteps, pMinSteps, pDay = 1, pLevel = 0, ByRef pLevels) As %Integer
 {
 	Quit:pLevel<0 pMinSteps
 	Quit:pSteps>pMinSteps pSteps
@@ -246,8 +247,7 @@ ClassMethod Move(pDebug, ByRef pMap, ByRef pPaths, ByRef pLinks, pCurrentPath, p
 	Quit pMinSteps
 }
 
-
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day20).GetInput(..#Day,.pInput)
 	
@@ -257,7 +257,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set maxx=0
 	set maxy=0
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,,.l)
+		do ##class(AOC.Y2019.Day20).ParseString(l,,.l)
 		set map=$i(map)
 		for i=1:1:$length(l) {
 			set map(map,i-1)=$e(l,i)
@@ -269,7 +269,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set maxx=maxx/2
 	set maxy=maxy/2
 	
-	//do ##class(AOC.Y2019).Print2DArray(.map)
+	//do ##class(AOC.Y2019.Day20).Print2DArray(.map)
 	
 	//optimization, loop through map and any . surrounded by 3 # is a dead end, change to #
 	set modified=1
@@ -295,7 +295,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		}
 	}
 	
-	do:pDebug ##class(AOC.Y2019).Print2DArray(.map)
+	do:pDebug ##class(AOC.Y2019.Day20).Print2DArray(.map)
 	
 	// find all paths
 	set tempy=$o(map(0))
@@ -477,7 +477,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day20).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day20).Part2(pInput,pDebug,pWithUI)

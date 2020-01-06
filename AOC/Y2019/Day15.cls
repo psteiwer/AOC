@@ -5,7 +5,7 @@ Parameter Day = 15;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day15).GetInput(..#Day,.pInput)
 	
@@ -92,7 +92,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 			zw:pDebug inputval
 			set oldinputval=inputval
 			w:pWithUI #
-			do:pWithUI ##class(AOC.Y2019).Print2DArray(.map,1,posx,posy)
+			do:pWithUI ##class(AOC.Y2019.Day15).Print2DArray(.map,1,posx,posy)
 			k newx
 			k newy
 			zw:pDebug posx
@@ -213,12 +213,12 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	zw:pDebug path
 	w:pWithUI #
-	do:pWithUI ##class(AOC.Y2019).Print2DArray(.map,1,oxygenx,oxygeny)
+	do:pWithUI ##class(AOC.Y2019.Day15).Print2DArray(.map,1,oxygenx,oxygeny)
 	
 	quit $length(path)+1
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day15).GetInput(..#Day,.pInput)
 	
@@ -434,7 +434,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	
 	set map(oxygeny,oxygenx)="O"
 	w:pWithUI #
-	do:pWithUI ##class(AOC.Y2019).Print2DArray(.map,"O")
+	do:pWithUI ##class(AOC.Y2019.Day15).Print2DArray(.map,"O")
 	set res=""
 	set done=0
 	while 'done {
@@ -467,12 +467,12 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 		k map
 		merge map=newmap
 		w:pWithUI #
-		do:pWithUI ##class(AOC.Y2019).Print2DArray(.newmap,"O")
+		do:pWithUI ##class(AOC.Y2019.Day15).Print2DArray(.newmap,"O")
 	}
 	quit res-1
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day15).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day15).Part2(pInput,pDebug,pWithUI)

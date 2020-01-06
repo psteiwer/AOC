@@ -5,14 +5,14 @@ Parameter Day = 14;
 
 Parameter Year = 2019;
 
-ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part1(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day14).GetInput(..#Day,.pInput)
 	
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,"=>",.a,.b)
+		do ##class(AOC.Y2019.Day14).ParseString(l,"=>",.a,.b)
 		set a=$lfs(a)
 		set tempb=$zstrip(b,"<>W")
 		set tempbamount=$p(tempb," ",1)
@@ -78,7 +78,7 @@ ClassMethod Part1(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit resources("ORE")
 }
 
-ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Part2(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Do ##class(AOC.Y2019.Day14).GetInput(..#Day,.pInput)
 	set fuelbase=##class(AOC.Y2019.Day14).Part1(.pInput)
@@ -86,7 +86,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	set res=""
 	set pos=$o(pInput(""),1,l)
 	while pos'="" {
-		do ##class(AOC.Y2019).ParseString(l,"=>",.a,.b)
+		do ##class(AOC.Y2019.Day14).ParseString(l,"=>",.a,.b)
 		set a=$lfs(a)
 		set tempb=$zstrip(b,"<>W")
 		set tempbamount=$p(tempb," ",1)
@@ -174,7 +174,7 @@ ClassMethod Part2(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
 	quit res
 }
 
-ClassMethod Run(pInput = "",  pDebug = 0,  pWithUI = 0) As %String
+ClassMethod Run(pInput = "", pDebug = 0, pWithUI = 0) As %String
 {
 	Set tPart1=##class(AOC.Y2019.Day14).Part1(pInput,pDebug,pWithUI)
 	Set tPart2=##class(AOC.Y2019.Day14).Part2(pInput,pDebug,pWithUI)
