@@ -57,6 +57,15 @@ Method RemoveEdge(pVertex1, pVertex2) As %Status
 	Quit tSC
 }
 
+Method GetDistance(pVertex1, pVertex2) As %Integer
+{
+	Set tRes=""
+	If '$Data(..Edges(pVertex1,pVertex2)) {
+		$$$ThrowStatus($$$ERROR($$$GeneralError,"No Edge from "_pVertex1_" to "_pVertex2))
+	}
+	Quit ..Edges(pVertex1,pVertex2)
+}
+
 Method ShortestDistance(pVertex1, pVertex2) As %Integer
 {
 	Quit:$Data(..ShortestDistances(pVertex1,pVertex2)) ..ShortestDistances(pVertex1,pVertex2)
@@ -214,6 +223,56 @@ Method LongestTraverse() As %Integer
 				Set tRoute=$List(tRoute,1,*-1)
 				Set tVertexName=$List(tRoute,*)
 				Set tDistance=tDistance-..ShortestDistance(tVertexName,tNextVertex)
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+		}
+	}
+
+	Quit tRes
+}
+
+Method LongestCycle() As %Integer
+{
+	Set tRes=0
+	
+	Set tRoute=""
+	Set tVertices=..GetListOfVertices()
+	For tVertex=1:1:$Listlength(tVertices) {
+		Set tDistance=0
+		Set tVertexName=$LG(tVertices,tVertex)
+		Set tStartVertex=tVertexName
+		Set tRoute=$LB(tVertexName)
+		Set tNextVertex=$O(..Edges(tVertexName,""))
+		While tNextVertex'="" {
+			While tNextVertex'="" {
+				Set tNextIsStart=(tNextVertex=tStartVertex)
+				While ((tNextVertex'="")&&(('tNextIsStart&&(##class(AOC.Utils.Utils).ListCount(tRoute,tNextVertex)>tNextIsStart))||(tNextIsStart&&($LL(tRoute)'=($LL(tVertices)))))) {
+					Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+					Set tNextIsStart=(tNextVertex=tStartVertex)
+				}
+				If tNextVertex="" {
+					Quit
+				}
+				
+				Set tDistance=tDistance+..GetDistance(tVertexName,tNextVertex)
+				Set tVertexName=tNextVertex
+				Set tNextVertex=""
+				Set tRoute=tRoute_$LB(tVertexName)
+				
+				If $LL(tRoute)=$LL(tVertices)+1 {
+					If tRes<tDistance {
+						Set tRes=tDistance
+					}
+				}
+				
+				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
+			}
+			// Roll back last move and try next
+			While ((tNextVertex="")&&($Listlength(tRoute)>1)) {
+				Set tNextVertex=$List(tRoute,*)
+				Set tRoute=$List(tRoute,1,*-1)
+				Set tVertexName=$List(tRoute,*)
+				Set tDistance=tDistance-..GetDistance(tVertexName,tNextVertex)
 				Set tNextVertex=$O(..Edges(tVertexName,tNextVertex))
 			}
 		}
